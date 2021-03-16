@@ -12,7 +12,7 @@
 
 - [Installation](#Installation)
 - [Usage Information](#Usage-Information)
-- [Technologies]((#Technologies)
+- [Technologies](#Technologies)
 - [Issues](#Issues)
 - [Contribute](#Contribute)
 - [Tests](#Tests)
