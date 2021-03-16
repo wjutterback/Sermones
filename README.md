@@ -51,9 +51,9 @@ No test instructions provided.
 
 If you have additional questions, you can reach me through GitHub or by e-mail:
 
-- [Github](https://github.com/DeadStockSkeleton)
-- [Github](https://github.com/SenyoAhadzie)
-- [Github](https://github.com/wjutterback)
+- [Iyana](https://github.com/DeadStockSkeleton)
+- [Senyo](https://github.com/SenyoAhadzie)
+- [Will](https://github.com/wjutterback)
 - uwill08@gmail.com
 - Senyo.E.Ahadzie@rice.edu
 - iyanamedlock@gmail.com
