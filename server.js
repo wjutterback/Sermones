@@ -1,7 +1,3 @@
-//https://ourcodeworld.com/articles/read/343/how-to-create-required-pem-certificates-for-https-connection-in-node-web-server
-//we won't be needing these just yet, but as HTTPS is required for https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia we will eventually
-//key/cert have been created
-
 const fs = require('fs');
 const privateKey = fs.readFileSync('certificates/key.pem', 'utf8');
 const certificate = fs.readFileSync('certificates/cert.pem', 'utf8');
@@ -52,15 +48,17 @@ app.use(routes);
 
 //socket IO config
 const io = require('socket.io')(httpServer, {
-  // ...
+  // ... options go here if we need for server
 });
 
 io.on('connection', (socket) => {
-  // ...
+  socket.emit('hello', 'world');
 });
 
 //default port for HTTPS is 443, in dev we need to use a different one
 sequelize.sync().then(() => {
   httpServer.listen(PORT, () => console.log(`Listening on port: ${PORT}`));
-  httpSecureServer.listen(8443, () => console.log(`HTTPS Server Listening`));
+  httpSecureServer.listen(8443, () =>
+    console.log(`HTTPS Server Listening on port 8443`)
+  );
 });
