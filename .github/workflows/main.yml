@@ -1,0 +1,4 @@
+- name: Slack Notify
+  # You may pin to the exact commit or the version.
+  # uses: rtCamp/action-slack-notify@f565a63638bd3615e76249bffab00fcb9dab90f7
+  uses: rtCamp/action-slack-notify@v2.1.3
