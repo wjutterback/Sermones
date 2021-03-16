@@ -1,0 +1,35 @@
+{
+  "name": "chat-app",
+  "version": "1.0.0",
+  "description": "An in-browser chat app",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wjutterback/Chat-App.git"
+  },
+  "keywords": [
+    "Chat",
+    "App"
+  ],
+  "author": "Will Utterback, Iyana Medlock, Senyo Ahadzie",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/wjutterback/Chat-App/issues"
+  },
+  "homepage": "https://github.com/wjutterback/Chat-App#readme",
+  "dependencies": {
+    "bcrypt": "^5.0.1",
+    "connect-session-sequelize": "^7.1.1",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "express-handlebars": "^5.2.1",
+    "express-session": "^1.17.1",
+    "handlebars": "^4.7.7",
+    "mysql2": "^2.2.5",
+    "sequelize": "^6.5.1",
+    "socket.io": "^4.0.0"
+  }
+}

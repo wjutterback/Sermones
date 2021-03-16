@@ -1,5 +1,5 @@
-
 [![License](https://img.shields.io/badge/license-MIT-green)](http://choosealicense.com/licenses/mit/)
+
 # Chat-App
 
 ## Description
@@ -29,10 +29,9 @@ npm install
 
 Start the server, create an account or login, and then start chatting!
 
-
 ## Technologies
 
-Sockets.io, Node.js, Express.js, Express-Session,  Sequelize.js, Handlebars.js/EJS (one of them), bcrypt.js, mysql2, dotenv, connection-session-sequelize, Knockout.js, jQuery.js
+Sockets.io, Node.js, Express.js, Express-Session, Sequelize.js, Handlebars.js/EJS (one of them), bcrypt.js, mysql2, dotenv, connection-session-sequelize, Knockout.js, jQuery.js
 
 ## Issues
 
@@ -49,9 +48,15 @@ No test instructions provided.
 ```
 
 ## Questions?
+
 If you have additional questions, you can reach me through GitHub or by e-mail:
-* [Github](https://github.com/wjutterback)
-* uwill08@gmail.com
+
+- [Github](https://github.com/DeadStockSkeleton)
+- [Github](https://github.com/SenyoAhadzie)
+- [Github](https://github.com/wjutterback)
+- uwill08@gmail.com
+- Senyo.E.Ahadzie@rice.edu
+- iyanamedlock@gmail.com
 
 ## License
 
@@ -76,4 +81,3 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-
