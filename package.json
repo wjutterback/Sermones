@@ -31,6 +31,7 @@
     "express-session": "^1.17.1",
     "handlebars": "^4.7.7",
     "mysql2": "^2.2.5",
+    "peer": "^0.6.1",
     "sequelize": "^6.5.1",
     "socket.io": "^4.0.0"
   },
