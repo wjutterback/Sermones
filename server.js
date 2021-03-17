@@ -59,6 +59,6 @@ io.on('connection', (socket) => {
 sequelize.sync().then(() => {
   httpServer.listen(PORT, () => console.log(`Listening on port: ${PORT}`));
   httpSecureServer.listen(8443, () =>
-    console.log(`HTTPS Server Listening on port 8443`)
+    console.log('HTTPS Server Listening on port 8443')
   );
 });
