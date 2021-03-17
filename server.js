@@ -5,6 +5,7 @@ const credentials = { key: privateKey, cert: certificate };
 
 const path = require('path');
 const express = require('express');
+const { ExpressPeerServer } = require('peer');
 const session = require('express-session');
 const exphbs = require('express-handlebars');
 const sequelize = require('./config/connection');
@@ -35,7 +36,11 @@ const sess = {
 //Server Creation
 const httpServer = require('http').createServer(app);
 const httpSecureServer = require('https').createServer(credentials, app);
+const peerServer = ExpressPeerServer(httpServer, {
+  debug: true
+});
 
+app.use('/peerjs', peerServer)
 app.use(session(sess));
 app.set('views', path.join(__dirname, '/views'));
 app.engine('.hbs', hbs.engine);
