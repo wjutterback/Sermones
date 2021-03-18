@@ -3,6 +3,8 @@ const privateKey = fs.readFileSync('certificates/key.pem', 'utf8');
 const certificate = fs.readFileSync('certificates/cert.pem', 'utf8');
 const credentials = { key: privateKey, cert: certificate };
 
+const { v4: uuidv4 } = require('uuid');
+
 const path = require('path');
 const express = require('express');
 const { ExpressPeerServer } = require('peer');
@@ -37,10 +39,12 @@ const sess = {
 const httpServer = require('http').createServer(app);
 const httpSecureServer = require('https').createServer(credentials, app);
 const peerServer = ExpressPeerServer(httpServer, {
-  debug: true
+  debug: true,
 });
 
-app.use('/peerjs', peerServer)
+//route to peerjs connection
+app.use('/peerjs', peerServer);
+
 app.use(session(sess));
 app.set('views', path.join(__dirname, '/views'));
 app.engine('.hbs', hbs.engine);
@@ -56,8 +60,16 @@ const io = require('socket.io')(httpServer, {
   // ... options go here if we need for server
 });
 
+// io.on('connection', (socket) => {
+//   socket.emit('user-connected');
+// });
+
 io.on('connection', (socket) => {
   socket.emit('hello', 'world');
+});
+
+io.on('message', (message) => {
+  console.log(message);
 });
 
 //default port for HTTPS is 443, in dev we need to use a different one
