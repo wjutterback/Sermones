@@ -18,6 +18,7 @@ const router = express.Router();
 const app = express();
 const PORT = process.env.PORT || 3030;
 
+
 //Handlebars Set-Up
 const hbs = exphbs.create({
   layoutsDir: path.join(__dirname, '/views/layouts'),
@@ -61,23 +62,9 @@ const io = require('socket.io')(httpServer, {
   // ... options go here if we need for server
 });
 
-io.on('message', (message) => {
-  console.log(message);
-});
+const socketRoutes = require('./routes/socketRoutes')(io);
 
-app.use(
-  router.get('/room/:id', (req, res) => {
-    io.on('connection', (socket) => {
-      const roomID = req.params.id;
-      socket.join(`${roomID}`);
-      socket.on('message', (message) => {
-        //send message to the same room
-        io.to(roomID).emit('createMessage', message);
-      });
-    });
-    res.render('roomchat');
-  })
-);
+app.use(socketRoutes);
 
 //default port for HTTPS is 443, in dev we need to use a different one
 sequelize.sync().then(() => {
