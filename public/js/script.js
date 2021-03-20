@@ -14,14 +14,19 @@ socket.on('create', () => {
   socket.emit('created');
 });
 
-// socket.on('user-connected', (userId) => {
-//   connectToNewUser(userId, stream);
-// });
+socket.on('createMessage', (message) => {
+  const messageBody = $('<div>')
+    .attr('class', 'card-body')
+    .attr('style', 'color:#d8d7df')
+    .append(`<p>${message}</p>`);
+  $('#chatCards').append(messageBody);
+});
 
 $('#chat-message').keydown(function (e) {
   if (e.which === 13 && $('#chat-message').val().length !== 0) {
     console.log(e);
     console.log($('#chat-message').val());
     socket.emit('message', $('#chat-message').val());
+    $('#chat-message').val('');
   }
 });
