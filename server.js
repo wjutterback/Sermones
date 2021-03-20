@@ -14,8 +14,10 @@ const sequelize = require('./config/connection');
 const routes = require('./routes/routes');
 const SequelizeStore = require('connect-session-sequelize')(session.Store);
 
+const router = express.Router();
 const app = express();
 const PORT = process.env.PORT || 3030;
+
 
 //Handlebars Set-Up
 const hbs = exphbs.create({
@@ -60,17 +62,9 @@ const io = require('socket.io')(httpServer, {
   // ... options go here if we need for server
 });
 
-// io.on('connection', (socket) => {
-//   socket.emit('user-connected');
-// });
+const socketRoutes = require('./routes/socketRoutes')(io);
 
-io.on('connection', (socket) => {
-  socket.emit('hello', 'world');
-});
-
-io.on('message', (message) => {
-  console.log(message);
-});
+app.use(socketRoutes);
 
 //default port for HTTPS is 443, in dev we need to use a different one
 sequelize.sync().then(() => {
