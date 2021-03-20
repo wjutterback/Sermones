@@ -14,7 +14,6 @@ const sequelize = require('./config/connection');
 const routes = require('./routes/routes');
 const SequelizeStore = require('connect-session-sequelize')(session.Store);
 
-const router = express.Router();
 const app = express();
 const PORT = process.env.PORT || 3030;
 
