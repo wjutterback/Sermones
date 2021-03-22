@@ -10,7 +10,7 @@ module.exports = (io) => {
         io.to(roomID).emit('createMessage', message);
       });
     });
-    res.render('roomchat');
+    res.render('roomchat', { loggedIn: req.session.loggedIn });
   });
 
   //Declare more routes

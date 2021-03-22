@@ -17,7 +17,6 @@ const SequelizeStore = require('connect-session-sequelize')(session.Store);
 const app = express();
 const PORT = process.env.PORT || 3030;
 
-
 //Handlebars Set-Up
 const hbs = exphbs.create({
   layoutsDir: path.join(__dirname, '/views/layouts'),
