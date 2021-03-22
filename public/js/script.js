@@ -1,17 +1,18 @@
 const socket = io('/');
 const PORT = 3030;
-socket.on('hello', (emit) => {
-  console.log(emit);
-});
 
-socket.on('create', () => {
-  const peer = new Peer(undefined, {
-    host: '/',
-    path: '/peerjs',
-    port: PORT,
-  });
-  console.log(peer);
-  socket.emit('created');
+// socket.on('create', () => {
+//   const peer = new Peer(undefined, {
+//     host: '/',
+//     path: '/peerjs',
+//     port: PORT,
+//   });
+//   console.log(peer);
+//   socket.emit('created');
+// });
+
+socket.on('user-disconnected', (id) => {
+  console.log(id);
 });
 
 socket.on('createMessage', (message) => {
@@ -97,4 +98,9 @@ $('#chat-message').keydown(function (e) {
     socket.emit('message', $('#chat-message').val());
     $('#chat-message').val('');
   }
+});
+
+$('#audioChannel1').on('click', () => {
+  const userName = $('#audioChannel1').attr('data-name');
+  $('#appendAudio').append(`<li>${userName}</li>`);
 });
