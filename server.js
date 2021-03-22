@@ -59,7 +59,6 @@ app.use(routes);
 const io = require('socket.io')(httpServer, {
   // ... options go here if we need for server
 });
-
 const socketRoutes = require('./routes/socketRoutes')(io);
 
 app.use(socketRoutes);

@@ -84,6 +84,16 @@ router.post('/sign-up', async (req, res) => {
   }
 });
 
+router.get('/room/:id', (req, res) => {
+  const roomID = req.params.id;
+  const userName = req.session.name;
+  res.render('roomchat', {
+    loggedIn: req.session.loggedIn,
+    name: userName,
+    roomID: roomID,
+  });
+});
+
 router.post('/logout', (req, res) => {
   if (req.session.loggedIn) {
     req.session.destroy(() => {
@@ -93,4 +103,5 @@ router.post('/logout', (req, res) => {
     res.redirect('/');
   }
 });
+
 module.exports = router;

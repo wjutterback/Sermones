@@ -1,8 +1,4 @@
-const socket = io('/');
 const PORT = 3030;
-socket.on('hello', (emit) => {
-  console.log(emit);
-});
 
 socket.on('create', () => {
   const peer = new Peer(undefined, {
@@ -10,8 +6,38 @@ socket.on('create', () => {
     path: '/peerjs',
     port: PORT,
   });
-  console.log(peer);
-  socket.emit('created');
+  console.log('peer', peer);
+
+  peer.on('open', function (id) {
+    socket.emit('created', id);
+  });
+
+  navigator.mediaDevices
+    .getUserMedia({ video: false, audio: true })
+    .then((stream) => {
+      peer.on('call', (incomingCall) => {
+        console.log('incoming stream triggered');
+        incomingCall.answer(stream);
+        incomingCall.on('stream', (incomingStream) => {
+          console.log(incomingStream);
+          $('audio')[0].srcObject = incomingStream;
+        });
+      });
+    });
+
+  //TODO: Figure out how to get the stream from navigator - connection works but calling microphone twice (not sure if that will)
+  socket.on('user-connected', (id) => {
+    navigator.mediaDevices
+      .getUserMedia({ video: false, audio: true })
+      .then((stream) => {
+        peer.call(id, stream);
+        console.log('peerId: script', id);
+        console.log('user connected stream', stream);
+      });
+  });
+  socket.on('user-disconnected', (id) => {
+    console.log(id);
+  });
 });
 
 socket.on('createMessage', (message) => {
@@ -75,6 +101,11 @@ const logout = async () => {
   }
 };
 
+const joinAudio = async (user) => {
+  console.log('audio join fired');
+  socket.emit('audio-joined', user);
+};
+
 $('#logout').on('click', function (event) {
   event.preventDefault();
   logout();
@@ -92,9 +123,13 @@ $('#signIn').on('click', function (event) {
 
 $('#chat-message').keydown(function (e) {
   if (e.which === 13 && $('#chat-message').val().length !== 0) {
-    console.log(e);
-    console.log($('#chat-message').val());
     socket.emit('message', $('#chat-message').val());
     $('#chat-message').val('');
   }
+});
+
+$('#audioChannel1').on('click', () => {
+  const userName = $('#audioChannel1').attr('data-name');
+  $('#appendAudio').append(`<li>${userName}</li>`);
+  joinAudio(userName);
 });
