@@ -1,5 +1,5 @@
 <div class="row">
-    <div class="col">
+  <div class="col">
     <div
       class="card"
       id="chatCards"
@@ -12,10 +12,19 @@
       "
     >
       <div class="card-body" style="color: #d8d7df">
-        <button type="button" class="btn btn-link" id="audioChannel1" data-name="{{name}}"><i class="fas fa-volume-up"></i> Audio Channel #1</button>
+        <button
+          type="button"
+          class="btn btn-link"
+          id="audioChannel1"
+          data-name="{{name}}" data-room="{{roomID}}"
+        >
+          <i class="fas fa-volume-up"></i> Audio Channel #1
+        </button>
         <ul id="appendAudio"></ul>
       </div>
-      <div class="card-body" style="color: #d8d7df"><a href="/channel/1">Chat Channel #1</a></div>
+      <div class="card-body" style="color: #d8d7df">
+        <a href="/channel/1">Chat Channel #1</a>
+      </div>
     </div>
   </div>
   <div class="col">
@@ -36,3 +45,4 @@
     </div>
   </div>
 </div>
+<script src="/js/roomchat.js"></script>

@@ -1,5 +1,4 @@
-const socket = io('/');
-const PORT = 3030;
+// const PORT = 3030;
 
 // socket.on('create', () => {
 //   const peer = new Peer(undefined, {
@@ -76,6 +75,11 @@ const logout = async () => {
   }
 };
 
+const joinAudio = async (user) => {
+  console.log('audio join fired');
+  socket.emit('audio-joined', user);
+};
+
 $('#logout').on('click', function (event) {
   event.preventDefault();
   logout();
@@ -93,8 +97,6 @@ $('#signIn').on('click', function (event) {
 
 $('#chat-message').keydown(function (e) {
   if (e.which === 13 && $('#chat-message').val().length !== 0) {
-    console.log(e);
-    console.log($('#chat-message').val());
     socket.emit('message', $('#chat-message').val());
     $('#chat-message').val('');
   }
@@ -103,4 +105,5 @@ $('#chat-message').keydown(function (e) {
 $('#audioChannel1').on('click', () => {
   const userName = $('#audioChannel1').attr('data-name');
   $('#appendAudio').append(`<li>${userName}</li>`);
+  joinAudio(userName);
 });
