@@ -5,10 +5,14 @@ module.exports = (io) => {
     console.log('connection fired: server');
     console.log(socket.id);
 
-    socket.on('audio-joined', (user) => {
-      console.log(user);
+    socket.on('audio-joined', () => {
+      socket.emit('create');
+      socket.on('created', (id) => {
+        console.log('peerID: server', id);
+        socket.emit('user-connected', id);
+      });
     });
-    
+
     socket.on('room-joined', (roomID, userID) => {
       console.log('room joined fired');
       socket.join(`${roomID}`);
@@ -16,6 +20,7 @@ module.exports = (io) => {
         //send message to the same room
         io.to(roomID).emit('createMessage', message);
       });
+
       socket.on('disconnect', () => {
         socket.broadcast.to(roomID).emit('user-disconnected', userID);
       });

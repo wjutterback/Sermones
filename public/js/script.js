@@ -1,17 +1,43 @@
-// const PORT = 3030;
+const PORT = 3030;
 
-// socket.on('create', () => {
-//   const peer = new Peer(undefined, {
-//     host: '/',
-//     path: '/peerjs',
-//     port: PORT,
-//   });
-//   console.log(peer);
-//   socket.emit('created');
-// });
+socket.on('create', () => {
+  const peer = new Peer(undefined, {
+    host: '/',
+    path: '/peerjs',
+    port: PORT,
+  });
+  console.log('peer', peer);
 
-socket.on('user-disconnected', (id) => {
-  console.log(id);
+  peer.on('open', function (id) {
+    socket.emit('created', id);
+  });
+
+  navigator.mediaDevices
+    .getUserMedia({ video: false, audio: true })
+    .then((stream) => {
+      peer.on('call', (incomingCall) => {
+        console.log('incoming stream triggered');
+        incomingCall.answer(stream);
+        incomingCall.on('stream', (incomingStream) => {
+          console.log(incomingStream);
+          $('audio')[0].srcObject = incomingStream;
+        });
+      });
+    });
+
+  //TODO: Figure out how to get the stream from navigator - connection works but calling microphone twice (not sure if that will)
+  socket.on('user-connected', (id) => {
+    navigator.mediaDevices
+      .getUserMedia({ video: false, audio: true })
+      .then((stream) => {
+        peer.call(id, stream);
+        console.log('peerId: script', id);
+        console.log('user connected stream', stream);
+      });
+  });
+  socket.on('user-disconnected', (id) => {
+    console.log(id);
+  });
 });
 
 socket.on('createMessage', (message) => {
