@@ -1,21 +1,39 @@
-<div class="chat-box">
-  <div class="chat-header">
-    <h6>Chat</h6>
+<div class="row">
+    <div class="col">
+    <div
+      class="card"
+      id="chatCards"
+      style="
+        padding-left: 0;
+        padding-right: 0;
+        margin-left: 0;
+        margin-right: 0;
+        background-color: #363940;
+      "
+    >
+      <div class="card-body" style="color: #d8d7df">
+        #Current Channel Selection goes here
+      </div>
+      <div class="card-body" style="color: #d8d7df">#Channel Message 1</div>
+    </div>
   </div>
-  <div class="chat-window">
-    <ul class="messages"></ul>
-  </div>
-  <div class="chat-input">
-    <input id="chat-message" type="text" placeholder="Type message here..." />
+  <div class="col">{{name}}</div>
+
+  <div class="col">
+    <div class="chat-box">
+      <div class="chat-header">
+        <h6>Chat</h6>
+      </div>
+      <div class="chat-window">
+        <ul class="messages"></ul>
+      </div>
+      <div class="chat-input">
+        <input
+          id="chat-message"
+          type="text"
+          placeholder="Type message here..."
+        />
+      </div>
+    </div>
   </div>
 </div>
-
-        <div class="card" id="chatCards" style="padding-left:0;padding-right:0;margin-left:0;margin-right:0;background-color:#363940" >
-            <div class="card-body" style="color:#d8d7df">
-              #Current Channel Selection goes here
-            </div>
-            <div class="card-body" style="color:#d8d7df">
-              #Channel Message 1
-            </div>
-
-          </div>
