@@ -12,7 +12,7 @@ socket.on('create', () => {
   const peer = new Peer(undefined, {
     host: '/',
     path: '/peerjs',
-    port: PORT,
+    port: process.env.PORT || PORT,
   });
 
   peer.on('open', function (id) {
