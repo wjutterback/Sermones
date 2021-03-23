@@ -34,11 +34,8 @@ socket.on('create', () => {
     });
   });
 
-  //TODO: Compare id to peer array IDs, call if different
   socket.on('user-connected', (id) => {
-    console.log('user-connected ID', id);
     peers.forEach((peerId) => {
-      console.log('peerId', peerId);
       if (peerId !== id) {
         peer.call(peerId, myStream);
       }
