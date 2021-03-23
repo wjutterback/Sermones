@@ -1,47 +1,66 @@
 let myStream;
-const peers = [];
 
-socket.on('create', () => {
+socket.on('create', (user) => {
   navigator.mediaDevices
     .getUserMedia({ video: false, audio: true })
     .then((stream) => {
       myStream = stream;
+      console.log(myStream);
     });
-
-  // heroku - potentially need to enable secure
-  // const peer = new Peer(undefined, {
-  //   host: 'peerjs-isw.herokuapp.com',
-  // });
-
-  //localhost
+  // heroku
   const peer = new Peer(undefined, {
-    host: '/',
-    path: '/peerjs',
-    port: 3030,
+    host: 'peerjs-isw.herokuapp.com',
   });
 
+  //localhost
+  // const peer = new Peer(undefined, {
+  //   host: '/',
+  //   path: '/peerjs',
+  //   port: 3030,
+  // });
+
   peer.on('open', function (id) {
-    socket.emit('created', id);
-    peers.push(id);
+    socket.emit('created', id, user);
+    console.log('on open', myStream);
   });
 
   peer.on('call', (incomingCall) => {
-    console.log('incoming stream triggered');
-    incomingCall.answer(myStream);
-    incomingCall.on('stream', (incomingStream) => {
-      console.log(incomingStream);
-      $('audio')[0].srcObject = incomingStream;
+    navigator.mediaDevices
+    .getUserMedia({ video: false, audio: true })
+    .then((stream) => {
+      myStream = stream;
+      console.log(myStream);
+      console.log('incoming stream triggered');
+      incomingCall.answer(myStream);
+      incomingCall.on('stream', (incomingStream) => {
+        const audio = document.createElement('audio');
+        audio.style.display = 'none';
+        document.body.appendChild(audio);
+
+        audio.srcObject = incomingStream;
+        audio.play();
+      });
     });
   });
 
-  //TODO: Figure out how to get the stream from navigator - connection works but calling microphone twice (not sure if that will)
-  //TODO: Compare id to peer array IDs, call if different
-  socket.on('user-connected', (id) => {
-    console.log('user-connected ID', id);
+  socket.on('user-connected', (id, peers) => {
     peers.forEach((peerId) => {
-      console.log('peerId', peerId);
       if (peerId !== id) {
-        peer.call(peerId, myStream);
+        navigator.mediaDevices
+        .getUserMedia({ video: false, audio: true })
+        .then((stream) => {
+          myStream = stream;
+          console.log(myStream);
+          let call = peer.call(peerId, myStream);
+          call.on('stream', function (incomingStream) {
+            const audio = document.createElement('audio');
+            audio.style.display = 'none';
+            document.body.appendChild(audio);
+
+            audio.srcObject = incomingStream;
+            audio.play();
+        });
+        });
       }
     });
   });
@@ -111,9 +130,9 @@ const logout = async () => {
   }
 };
 
-const joinAudio = async () => {
+const joinAudio = async (name) => {
   console.log('audio join fired');
-  socket.emit('audio-joined', $('#audioChannel1').attr('data-channel'));
+  socket.emit('audio-joined', $('#audioChannel1').attr('data-channel'), name);
 };
 
 $('#logout').on('click', function (event) {
@@ -141,5 +160,5 @@ $('#chat-message').keydown(function (e) {
 $('#audioChannel1').on('click', () => {
   const userName = $('#audioChannel1').attr('data-name');
   $('#appendAudio').append(`<li>${userName}</li>`);
-  joinAudio();
+  joinAudio(userName);
 });
