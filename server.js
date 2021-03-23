@@ -1,7 +1,7 @@
-const fs = require('fs');
-const privateKey = fs.readFileSync('certificates/key.pem', 'utf8');
-const certificate = fs.readFileSync('certificates/cert.pem', 'utf8');
-const credentials = { key: privateKey, cert: certificate };
+// const fs = require('fs');
+// const privateKey = fs.readFileSync('certificates/key.pem', 'utf8');
+// const certificate = fs.readFileSync('certificates/cert.pem', 'utf8');
+// const credentials = { key: privateKey, cert: certificate };
 
 const { v4: uuidv4 } = require('uuid');
 
