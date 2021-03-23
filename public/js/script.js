@@ -8,19 +8,20 @@ socket.on('create', () => {
       myStream = stream;
     });
 
-  //heroku - potentially need to enable secure
-  // const peer = new Peer(undefined, {
-  //   host: 'hidden-scrubland-97392.herokuapp.com',
-  //   path: '/peerjs',
-  //   port: 443,
-  // });
+  // heroku - potentially need to enable secure
+  const peer = new Peer(undefined, {
+    host: 'hidden-scrubland-97392.herokuapp.com',
+    path: '/peerjs',
+    port: 443,
+    secure: true,
+  });
 
   //localhost
-  const peer = new Peer(undefined, {
-    host: '/',
-    path: '/peerjs',
-    port: 3030,
-  });
+  // const peer = new Peer(undefined, {
+  //   host: '/',
+  //   path: '/peerjs',
+  //   port: 3030,
+  // });
 
   peer.on('open', function (id) {
     socket.emit('created', id);
