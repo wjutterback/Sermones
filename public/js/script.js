@@ -11,9 +11,6 @@ socket.on('create', () => {
   // heroku - potentially need to enable secure
   const peer = new Peer(undefined, {
     host: 'peerjs-isw.herokuapp.com',
-    path: '/peerjs',
-    port: 443,
-    secure: true,
   });
 
   //localhost
