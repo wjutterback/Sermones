@@ -10,9 +10,9 @@ socket.on('create', () => {
     });
 
   const peer = new Peer(undefined, {
-    host: '/',
+    host: 'hidden-scrubland-97392.herokuapp.com',
     path: '/peerjs',
-    port: process.env.PORT || PORT,
+    port: 443,
   });
 
   peer.on('open', function (id) {
