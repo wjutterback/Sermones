@@ -48,6 +48,76 @@ socket.on('create', () => {
   });
 });
 
+//Function to get audio from device without audio, takes in a success and an error callback as parameters
+function getAudio(successCallback, errorCallback){
+  navigator.getUserMedia({
+      audio: true,
+      video: false
+  }, successCallback, errorCallback);
+}
+
+//Receives call object from (Peer), and eventually attaches it to page
+function onReceiveCall(call){
+
+  //Notify user peer is calling
+  console.log('peer is calling...');
+  //Console log call object
+  console.log(call);
+
+  //Call getAudio with inline success and error callbacks
+  getAudio(
+      function(MediaStream){
+        //Use built-in answer function to call to provided MediaStream
+          call.answer(MediaStream);
+          //Notify user call is being answered
+          console.log('answering call started...');
+      },
+      function(err){
+        //Notify user if error occurred
+          console.log('an error occured while getting the audio');
+          //Console log error
+          console.log(err);
+      }
+  );
+
+  //Send the stream to the browser
+  call.on('stream', onReceiveStream);
+}
+
+//On receiving stream, attach it to page
+function onReceiveStream(stream){
+  //Find audio container on page
+  var audio = document.querySelector('audio');
+  //Attach stream to audio src
+  audio.src = window.URL.createObjectURL(stream);
+  //Load duration and text tracks for audio data
+  audio.onloadedmetadata = function(e){
+    //Notify user audio is playing
+      console.log('now playing the audio');
+      //Play the audio
+      audio.play();
+  }
+}
+
+$('#start-call').click(function(){
+
+  console.log('starting call...');
+
+  getAudio(
+      function(MediaStream){
+
+          console.log('now calling ' + to);
+          var call = peer.call(to, MediaStream);
+          call.on('stream', onReceiveStream);
+      },
+      function(err){
+          console.log('an error occured while getting the audio');
+          console.log(err);
+      }
+  );
+
+});
+
 socket.on('createMessage', (message) => {
   const messageBody = $('<div>')
     .attr('class', 'card-body')
