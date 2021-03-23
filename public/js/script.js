@@ -30,14 +30,9 @@ socket.on('create', () => {
     navigator.mediaDevices
       .getUserMedia({ video: false, audio: true })
       .then((stream) => {
-        window.localStream = stream;
-        window.localAudio.srcObject = stream;
-        window.localAudio.autoplay = true;
-        // peer.call(id, stream);
-        // console.log('peerId: script', id);
-        // console.log('user connected stream', stream);
-      }).catch((err) => {
-        console.log(err);
+        peer.call(id, stream);
+        console.log('peerId: script', id);
+        console.log('user connected stream', stream);
       });
   });
   socket.on('user-disconnected', (id) => {
