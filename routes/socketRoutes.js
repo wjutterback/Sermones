@@ -13,7 +13,7 @@ module.exports = (io) => {
       });
     });
 
-    socket.on('room-joined', (roomID, userID) => {
+    socket.on('room-joined', (roomID) => {
       console.log('room joined fired');
       socket.join(`${roomID}`);
       socket.on('message', (message) => {
@@ -22,7 +22,7 @@ module.exports = (io) => {
       });
 
       socket.on('disconnect', () => {
-        socket.broadcast.to(roomID).emit('user-disconnected', userID);
+        socket.broadcast.to(roomID).emit('user-disconnected');
       });
     });
   });
