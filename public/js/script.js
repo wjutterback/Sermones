@@ -37,9 +37,7 @@ socket.on('create', () => {
   //TODO: Figure out how to get the stream from navigator - connection works but calling microphone twice (not sure if that will)
   //TODO: Compare id to peer array IDs, call if different
   socket.on('user-connected', (id) => {
-    console.log('user-connected ID', id);
     peers.forEach((peerId) => {
-      console.log('peerId', peerId);
       if (peerId !== id) {
         peer.call(peerId, myStream);
       }
