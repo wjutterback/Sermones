@@ -1,9 +1,9 @@
-// const fs = require('fs');
-// const privateKey = fs.readFileSync('certificates/key.pem', 'utf8');
-// const certificate = fs.readFileSync('certificates/cert.pem', 'utf8');
-// const credentials = { key: privateKey, cert: certificate };
+const fs = require('fs');
+const privateKey = fs.readFileSync('certificates/key.pem', 'utf8');
+const certificate = fs.readFileSync('certificates/cert.pem', 'utf8');
+const credentials = { key: privateKey, cert: certificate };
 
-// const { v4: uuidv4 } = require('uuid');
+const { v4: uuidv4 } = require('uuid');
 
 const path = require('path');
 const express = require('express');
@@ -37,7 +37,7 @@ const sess = {
 
 //Server Creation
 const httpServer = require('http').createServer(app);
-// const httpSecureServer = require('https').createServer(credentials, app);
+const httpSecureServer = require('https').createServer(credentials, app);
 const peerServer = ExpressPeerServer(httpServer, {
   debug: true,
 });
@@ -66,7 +66,7 @@ app.use(socketRoutes);
 //default port for HTTPS is 443, in dev we need to use a different one
 sequelize.sync().then(() => {
   httpServer.listen(PORT, () => console.log(`Listening on port: ${PORT}`));
-  // httpSecureServer.listen(8443, () =>
-  //   console.log('HTTPS Server Listening on port 8443')
-  // );
+  httpSecureServer.listen(8443, () =>
+    console.log('HTTPS Server Listening on port 8443')
+  );
 });
