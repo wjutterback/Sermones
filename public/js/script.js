@@ -9,16 +9,16 @@ socket.on('create', () => {
     });
 
   // heroku - potentially need to enable secure
-  const peer = new Peer(undefined, {
-    host: 'peerjs-isw.herokuapp.com',
-  });
+  // const peer = new Peer(undefined, {
+  //   host: 'peerjs-isw.herokuapp.com',
+  // });
 
   //localhost
-  // const peer = new Peer(undefined, {
-  //   host: '/',
-  //   path: '/peerjs',
-  //   port: 3030,
-  // });
+  const peer = new Peer(undefined, {
+    host: '/',
+    path: '/peerjs',
+    port: 3030,
+  });
 
   peer.on('open', function (id) {
     socket.emit('created', id);
