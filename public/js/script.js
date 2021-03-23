@@ -9,16 +9,16 @@ socket.on('create', () => {
     });
 
   // heroku - potentially need to enable secure
-  // const peer = new Peer(undefined, {
-  //   host: 'peerjs-isw.herokuapp.com',
-  // });
+  const peer = new Peer(undefined, {
+    host: 'peerjs-isw.herokuapp.com',
+  });
 
   //localhost
-  const peer = new Peer(undefined, {
-    host: '/',
-    path: '/peerjs',
-    port: 3030,
-  });
+  // const peer = new Peer(undefined, {
+  //   host: '/',
+  //   path: '/peerjs',
+  //   port: 3030,
+  // });
 
   peer.on('open', function (id) {
     socket.emit('created', id);
@@ -34,7 +34,6 @@ socket.on('create', () => {
     });
   });
 
-  //TODO: Figure out how to get the stream from navigator - connection works but calling microphone twice (not sure if that will)
   //TODO: Compare id to peer array IDs, call if different
   socket.on('user-connected', (id) => {
     console.log('user-connected ID', id);
