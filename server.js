@@ -37,7 +37,7 @@ const sess = {
 
 //Server Creation
 const httpServer = require('http').createServer(app);
-const httpSecureServer = require('https').createServer(credentials, app);
+// const httpSecureServer = require('https').createServer(credentials, app);
 const peerServer = ExpressPeerServer(httpServer, {
   debug: true,
 });
@@ -65,7 +65,7 @@ app.use(socketRoutes);
 
 //default port for HTTPS is 443, in dev we need to use a different one
 sequelize.sync().then(() => {
-  app.listen(PORT, () => console.log(`Listening on port: ${PORT}`));
+  httpServer.listen(PORT, () => console.log(`Listening on port: ${PORT}`));
   // httpSecureServer.listen(443, () =>
   //   console.log('HTTPS Server Listening on port 8443')
   // );
