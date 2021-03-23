@@ -10,7 +10,7 @@ socket.on('create', () => {
 
   // heroku - potentially need to enable secure
   const peer = new Peer(undefined, {
-    host: 'hidden-scrubland-97392.herokuapp.com',
+    host: 'peerjs-isw.herokuapp.com',
     path: '/peerjs',
     port: 443,
     secure: true,
