@@ -5,21 +5,81 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    
 </head>
 <body>
     <video autoplay="true" id="videoElement"></video>
+    <canvas id="canvasLessTwo" width="1080" height="720"></canvas>
+    <span id="canvasLessTwoFull">0</span>
+    <canvas id="canvasLessOne" width="1080" height="720"></canvas>
+    <span id="canvasLessOneFull">0</span>
+    <canvas id="canvas" width="1080" height="720"></canvas>
+
+    <script src="reimg.js"></script>
     <script>
+        // const ReImg=require('reimg.js');
         var video = document.querySelector("#videoElement");
+        // var canvas = document.createElement('canvas');
+        // const canvas = window.canvas = document.querySelector('canvas');
+        const canvas = document.querySelector('#canvas');
+        const canvasLessOne= document.querySelector('#canvasLessOne');
+        const canvasLessTwo= document.querySelector('#canvasLessTwo');
+        const dontStop=true;
+        // canvas.width = 480;
+        // canvas.height = 360;
 
         if (navigator.mediaDevices.getUserMedia) {
         navigator.mediaDevices.getUserMedia({ video: true })
             .then(function (stream) {
             video.srcObject = stream;
+            // canvas.width = video.videoWidth;
+            //     canvas.height = video.videoHeight;
+            //     canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+            
+            // var imgFromCanvas=ReImg.fromCanvas(canvas);
+            // debugger;
             })
             .catch(function (err0r) {
             console.log("Something went wrong!");
             });
+
+           
         }
+
+        $("#videoElement").on("loadeddata", function() {
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            canvasLessOne.width = video.videoWidth;
+            canvasLessOne.height = video.videoHeight;
+            canvasLessTwo.width = video.videoWidth;
+            canvasLessTwo.height = video.videoHeight;
+            // canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+            if($("#canvasLessTwoFull").text()==="0")
+            {
+                canvasLessTwo.getContext('2d').drawImage(video, 0, 0, canvasLessTwo.width, canvasLessTwo.height);
+                $("#canvasLessTwoFull").text(1)
+            }
+            if($("#canvasLessOneFull").text()==="0")
+            {
+                canvasLessOne.getContext('2d').drawImage(video, 0, 0, canvasLessOne.width, canvasLessOne.height);
+                $("#canvasLessOneFull").text(1)
+            }
+            while (dontStop)
+            {
+                
+            }
+
+        });
+        // $(document).ready(function()
+        // {
+            
+        // })
+        
+        
+    </script>
+    <script>
+        
     </script>
 </body>
 </html>
