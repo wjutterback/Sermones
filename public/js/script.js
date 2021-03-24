@@ -13,11 +13,11 @@ socket.on('create', (user) => {
   });
 
   //localhost
-  // const peer = new Peer(undefined, {
-  //   host: '/',
-  //   path: '/peerjs',
-  //   port: 3030,
-  // });
+  //   const peer = new Peer(undefined, {
+  //     host: '/',
+  //     path: '/peerjs',
+  //     port: 3030,
+  //   });
 
   peer.on('open', function (id) {
     socket.emit('created', id, user);
@@ -26,45 +26,41 @@ socket.on('create', (user) => {
 
   peer.on('call', (incomingCall) => {
     navigator.mediaDevices
-    .getUserMedia({ video: false, audio: true })
-    .then((stream) => {
-      myStream = stream;
-      console.log(myStream);
-      console.log('incoming stream triggered');
-      incomingCall.answer(myStream);
-      incomingCall.on('stream', (incomingStream) => {
-        const audio = document.createElement('audio');
-        audio.style.display = 'none';
-        document.body.appendChild(audio);
+      .getUserMedia({ video: false, audio: true })
+      .then((stream) => {
+        myStream = stream;
+        console.log(myStream);
+        console.log('incoming stream triggered');
+        incomingCall.answer(myStream);
+        incomingCall.on('stream', (incomingStream) => {
+          const audio = document.createElement('audio');
+          audio.style.display = 'none';
+          document.body.appendChild(audio);
 
-        audio.srcObject = incomingStream;
-        audio.play();
+          audio.srcObject = incomingStream;
+          audio.play();
+        });
       });
-    });
   });
 
-<<<<<<< HEAD
-  socket.on('user-connected', (id) => {
-=======
   socket.on('user-connected', (id, peers) => {
->>>>>>> 37f8c1952dbc58d5b63d7d25090db15b7ea50204
     peers.forEach((peerId) => {
       if (peerId !== id) {
         navigator.mediaDevices
-        .getUserMedia({ video: false, audio: true })
-        .then((stream) => {
-          myStream = stream;
-          console.log(myStream);
-          let call = peer.call(peerId, myStream);
-          call.on('stream', function (incomingStream) {
-            const audio = document.createElement('audio');
-            audio.style.display = 'none';
-            document.body.appendChild(audio);
+          .getUserMedia({ video: false, audio: true })
+          .then((stream) => {
+            myStream = stream;
+            console.log(myStream);
+            let call = peer.call(peerId, myStream);
+            call.on('stream', function (incomingStream) {
+              const audio = document.createElement('audio');
+              audio.style.display = 'none';
+              document.body.appendChild(audio);
 
-            audio.srcObject = incomingStream;
-            audio.play();
-        });
-        });
+              audio.srcObject = incomingStream;
+              audio.play();
+            });
+          });
       }
     });
   });
