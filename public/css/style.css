@@ -1,18 +1,57 @@
-.chat-box {
-  background-color: #1e2e88;
-  border: 3px solid #08c52e;
+*{
+  font-family: 'Montserrat', sans-serif;
+  color: #d8d7df;
 }
 
-.chat-header {
-  color: white;
-  text-align: center;
+a{
+  text-decoration: none;
+  color: #d8d7df;
 }
 
-.chat-window {
-  background-color: red;
-  border: 3px solid #08c52e;
+body{
+  height: 94.1vh;
+  overflow: hidden;
 }
 
-.messages {
-  color: white;
+.audioSection{
+  max-height: 400px;
+  overflow-x: hidden;
+}
+
+.chat-window{
+  height: 96%;
+  overflow-x: hidden;
+  
+}
+
+.main{
+  height: 100%;
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background-color: #363940;
+  border-radius: 25px;
+  
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background-color: #282a2e;
+  border-radius: 25px;
+}
+
+
+.message-card{
+    background-color: transparent;
+    border: none;
+}
+
+.row{
+
 }

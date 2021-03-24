@@ -41,10 +41,16 @@ socket.on('create', () => {
 });
 
 socket.on('createMessage', (message) => {
-  const messageBody = $('<div>')
-    .attr('class', 'card-body')
-    .attr('style', 'color:#d8d7df')
-    .append(`<p>${message}</p>`);
+  const username = localStorage.getItem('username');
+  const messageBody = $('<div>');
+  messageBody.html(`<div  class="row card mb-2 p-3 message-card">
+  <div class="card-header p-1" style="background-color: transparent; border: none;">
+    ${username} <small class="text-muted">${new Date().toLocaleString()}</small>
+  </div>
+  <div class="card-body p-1">
+    ${message}
+  </div>
+</div>`);
   $('#chatCards').append(messageBody);
 });
 
@@ -108,16 +114,19 @@ const joinAudio = async (user) => {
 
 $('#logout').on('click', function (event) {
   event.preventDefault();
+  localStorage.removeItem('username');
   logout();
 });
 
 $('#createAccount').on('click', function (event) {
   event.preventDefault();
+  localStorage.setItem('username',$('#id').val());
   signup($('#id').val(), $('#pw').val());
 });
 
 $('#signIn').on('click', function (event) {
   event.preventDefault();
+  localStorage.setItem('username',$('#id').val());
   login($('#id').val(), $('#pw').val());
 });
 
