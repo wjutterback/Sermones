@@ -1,39 +1,45 @@
-const PORT = 3030;
+let myStream;
+const peers = [];
 
 socket.on('create', () => {
-  const peer = new Peer(undefined, {
-    host: '/',
-    path: '/peerjs',
-    port: PORT,
-  });
-  console.log('peer', peer);
-
-  peer.on('open', function (id) {
-    socket.emit('created', id);
-  });
-
   navigator.mediaDevices
     .getUserMedia({ video: false, audio: true })
     .then((stream) => {
-      peer.on('call', (incomingCall) => {
-        console.log('incoming stream triggered');
-        incomingCall.answer(stream);
-        incomingCall.on('stream', (incomingStream) => {
-          console.log(incomingStream);
-          $('audio')[0].srcObject = incomingStream;
-        });
-      });
+      myStream = stream;
     });
 
-  //TODO: Figure out how to get the stream from navigator - connection works but calling microphone twice (not sure if that will)
+  // heroku - potentially need to enable secure
+  const peer = new Peer(undefined, {
+    host: 'peerjs-isw.herokuapp.com',
+  });
+
+  //localhost
+//   const peer = new Peer(undefined, {
+//     host: '/',
+//     path: '/peerjs',
+//     port: 3030,
+//   });
+
+  peer.on('open', function (id) {
+    socket.emit('created', id);
+    peers.push(id);
+  });
+
+  peer.on('call', (incomingCall) => {
+    console.log('incoming stream triggered');
+    incomingCall.answer(myStream);
+    incomingCall.on('stream', (incomingStream) => {
+      console.log(incomingStream);
+      $('audio')[0].srcObject = incomingStream;
+    });
+  });
+
   socket.on('user-connected', (id) => {
-    navigator.mediaDevices
-      .getUserMedia({ video: false, audio: true })
-      .then((stream) => {
-        peer.call(id, stream);
-        console.log('peerId: script', id);
-        console.log('user connected stream', stream);
-      });
+    peers.forEach((peerId) => {
+      if (peerId !== id) {
+        peer.call(peerId, myStream);
+      }
+    });
   });
   socket.on('user-disconnected', (id) => {
     console.log(id);
@@ -107,9 +113,9 @@ const logout = async () => {
   }
 };
 
-const joinAudio = async (user) => {
+const joinAudio = async () => {
   console.log('audio join fired');
-  socket.emit('audio-joined', user);
+  socket.emit('audio-joined', $('#audioChannel1').attr('data-channel'));
 };
 
 $('#logout').on('click', function (event) {
@@ -140,5 +146,5 @@ $('#chat-message').keydown(function (e) {
 $('#audioChannel1').on('click', () => {
   const userName = $('#audioChannel1').attr('data-name');
   $('#appendAudio').append(`<li>${userName}</li>`);
-  joinAudio(userName);
+  joinAudio();
 });
