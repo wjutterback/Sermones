@@ -1,43 +1,54 @@
-let myStream;
-const peers = [];
-
-socket.on('create', () => {
-  navigator.mediaDevices
-    .getUserMedia({ video: false, audio: true })
-    .then((stream) => {
-      myStream = stream;
-    });
-
-  // heroku - potentially need to enable secure
+socket.on('create', (user) => {
+  // heroku
   const peer = new Peer(undefined, {
     host: 'peerjs-isw.herokuapp.com',
   });
 
   //localhost
-//   const peer = new Peer(undefined, {
-//     host: '/',
-//     path: '/peerjs',
-//     port: 3030,
-//   });
+  // const peer = new Peer(undefined, {
+  //   host: '/',
+  //   path: '/peerjs',
+  //   port: 3030,
+  // });
 
   peer.on('open', function (id) {
-    socket.emit('created', id);
-    peers.push(id);
+    socket.emit('created', id, user);
   });
 
   peer.on('call', (incomingCall) => {
-    console.log('incoming stream triggered');
-    incomingCall.answer(myStream);
-    incomingCall.on('stream', (incomingStream) => {
-      console.log(incomingStream);
-      $('audio')[0].srcObject = incomingStream;
-    });
+    navigator.mediaDevices
+      .getUserMedia({ video: false, audio: true })
+      .then((stream) => {
+        const myStream = stream;
+        console.log(myStream);
+        console.log('incoming stream triggered');
+        incomingCall.answer(myStream);
+        incomingCall.on('stream', (incomingStream) => {
+          const audio = document.createElement('audio');
+
+          audio.srcObject = incomingStream;
+          audio.play();
+          document.body.appendChild(audio);
+        });
+      });
   });
 
-  socket.on('user-connected', (id) => {
+  socket.on('user-connected', (id, peers) => {
     peers.forEach((peerId) => {
       if (peerId !== id) {
-        peer.call(peerId, myStream);
+        navigator.mediaDevices
+          .getUserMedia({ video: false, audio: true })
+          .then((stream) => {
+            const myStream = stream;
+            console.log(myStream);
+            let call = peer.call(peerId, myStream);
+            call.on('stream', function (incomingStream) {
+              const audio = document.createElement('audio');
+              audio.srcObject = incomingStream;
+              audio.play();
+              document.body.appendChild(audio);
+            });
+          });
       }
     });
   });
@@ -113,9 +124,9 @@ const logout = async () => {
   }
 };
 
-const joinAudio = async () => {
+const joinAudio = async (name) => {
   console.log('audio join fired');
-  socket.emit('audio-joined', $('#audioChannel1').attr('data-channel'));
+  socket.emit('audio-joined', $('#audioChannel1').attr('data-channel'), name);
 };
 
 $('#logout').on('click', function (event) {
@@ -126,13 +137,13 @@ $('#logout').on('click', function (event) {
 
 $('#createAccount').on('click', function (event) {
   event.preventDefault();
-  localStorage.setItem('username',$('#id').val());
+  localStorage.setItem('username', $('#id').val());
   signup($('#id').val(), $('#pw').val());
 });
 
 $('#signIn').on('click', function (event) {
   event.preventDefault();
-  localStorage.setItem('username',$('#id').val());
+  localStorage.setItem('username', $('#id').val());
   login($('#id').val(), $('#pw').val());
 });
 
@@ -146,5 +157,5 @@ $('#chat-message').keydown(function (e) {
 $('#audioChannel1').on('click', () => {
   const userName = $('#audioChannel1').attr('data-name');
   $('#appendAudio').append(`<li>${userName}</li>`);
-  joinAudio();
+  joinAudio(userName);
 });

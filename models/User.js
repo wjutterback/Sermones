@@ -24,6 +24,10 @@ User.init(
       type: DataTypes.STRING,
       allowNull: false,
     },
+    callerId: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
   },
   {
     hooks: {
