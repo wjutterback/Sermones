@@ -148,13 +148,27 @@ $('#signIn').on('click', function (event) {
 
 $('#chat-message').keydown(function (e) {
   if (e.which === 13 && $('#chat-message').val().length !== 0) {
-    socket.emit('message', $('#chat-message').val(), localStorage.getItem('username'));
+    socket.emit(
+      'message',
+      $('#chat-message').val(),
+      localStorage.getItem('username')
+    );
     $('#chat-message').val('');
   }
 });
 
 $('#audioChannel1').on('click', () => {
   const userName = $('#audioChannel1').attr('data-name');
-  $('#appendAudio').append(`<li>${userName}</li>`);
-  joinAudio(userName);
+  const children = document.querySelectorAll('.userName');
+  if (children.length === 0) {
+    $('#appendAudio').append(`<li class='userName'>${userName}</li>`);
+    joinAudio(userName);
+  } else {
+    children.forEach((child) => {
+      if (child.innerHTML !== userName) {
+        $('#appendAudio').append(`<li class='userName'>${userName}</li>`);
+        joinAudio(userName);
+      }
+    });
+  }
 });
