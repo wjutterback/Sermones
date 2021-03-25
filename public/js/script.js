@@ -57,8 +57,7 @@ socket.on('create', (user) => {
   });
 });
 
-socket.on('createMessage', (message) => {
-  const username = localStorage.getItem('username');
+socket.on('createMessage', (message, username) => {
   const messageBody = $('<div>');
   messageBody.html(`<div  class="row card mb-2 p-3 message-card">
   <div class="card-header p-1" style="background-color: transparent; border: none;">
@@ -149,7 +148,7 @@ $('#signIn').on('click', function (event) {
 
 $('#chat-message').keydown(function (e) {
   if (e.which === 13 && $('#chat-message').val().length !== 0) {
-    socket.emit('message', $('#chat-message').val());
+    socket.emit('message', $('#chat-message').val(), localStorage.getItem('username'));
     $('#chat-message').val('');
   }
 });

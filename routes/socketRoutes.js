@@ -28,9 +28,9 @@ module.exports = (io) => {
     socket.on('room-joined', (roomID) => {
       console.log('room joined fired');
       socket.join(`${roomID}`);
-      socket.on('message', (message) => {
+      socket.on('message', (message, username) => {
         //send message to the same room
-        io.to(roomID).emit('createMessage', message);
+        io.to(roomID).emit('createMessage', message, username);
       });
 
       socket.on('disconnect', () => {
