@@ -15,16 +15,20 @@
     <canvas id="canvasLessOne" width="1080" height="720"></canvas>
     <span id="canvasLessOneFull">0</span>
     <canvas id="canvas" width="1080" height="720"></canvas>
+    <canvas id="canvasDiff" width="1080" height="720"></canvas>
 
     <script src="reimg.js"></script>
     <script>
         // const ReImg=require('reimg.js');
         var video = document.querySelector("#videoElement");
+        // var rgb = require('color-space/rgb');
+        // var lab = require('color-space/lab');
         // var canvas = document.createElement('canvas');
         // const canvas = window.canvas = document.querySelector('canvas');
         const canvas = document.querySelector('#canvas');
         const canvasLessOne= document.querySelector('#canvasLessOne');
         const canvasLessTwo= document.querySelector('#canvasLessTwo');
+        const canvasDiff= document.querySelector('#canvasDiff');
         const dontStop=true;
         // canvas.width = 480;
         // canvas.height = 360;
@@ -54,19 +58,73 @@
             canvasLessOne.height = video.videoHeight;
             canvasLessTwo.width = video.videoWidth;
             canvasLessTwo.height = video.videoHeight;
+            canvasDiff.width=video.videoWidth;
+            canvasDiff.height=video.videoHeight;
             // canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
-            if($("#canvasLessTwoFull").text()==="0")
+            // const track = video.srcObject.getVideoTracks()[0];
+            canvasLessTwo.getContext('2d').drawImage(video, 0, 0, canvasLessTwo.width, canvasLessTwo.height);
+            canvasLessOne.getContext('2d').drawImage(video, 0, 0, canvasLessOne.width, canvasLessOne.height);
+            canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+            var imgDataLessTwo = canvasLessTwo.getContext('2d').getImageData(0, 0, canvasLessTwo.width, canvasLessTwo.height);
+            // imgDataLessTwo=imgDataLessTwo.data;
+            var imgDataLessOne = canvasLessOne.getContext('2d').getImageData(0, 0, canvasLessOne.width, canvasLessOne.height);
+            // imgDataLessOne=imgDataLessOne.data;
+            var imgData = canvas.getContext('2d').getImageData(0, 0, canvas.width, canvas.height);
+            // imgData=imgData.data;
+            var rgb_diff = [];
+
+            debugger;
+
+            let lastVar=0;
+            try{
+            for(var i = 0;i<=imgDataLessOne.data.length/4-1;i++)
             {
-                canvasLessTwo.getContext('2d').drawImage(video, 0, 0, canvasLessTwo.width, canvasLessTwo.height);
-                $("#canvasLessTwoFull").text(1)
+                // console.log(imgData.data[4*i]);
+                // console.log(i);
+                const pixelShow=(Math.abs(imgData.data[4*i] - imgDataLessOne.data[4*i])<10) && (Math.abs(imgData.data[4*i+1] - imgDataLessOne.data[4*i+1])<10) && (Math.abs(imgData.data[4*i+2] - imgDataLessOne.data[4*i+2])<10);
+                rgb_diff.push(imgData.data[4*i]*pixelShow);
+                // console.log(rgb_diff);
+                // debugger;
+                rgb_diff.push(imgData.data[4*i+1]*pixelShow);
+                rgb_diff.push(imgData.data[4*i+2]*pixelShow);
+                rgb_diff.push(imgData.data[4*i+3]);
+                lastVar=i;
+                // if (i==imgDataLessOne.data.length/4-1)
+                // {
+                //     debugger;
+                // }
+            }}
+            catch{
+                console.log(lastVar);
             }
-            if($("#canvasLessOneFull").text()==="0")
-            {
-                canvasLessOne.getContext('2d').drawImage(video, 0, 0, canvasLessOne.width, canvasLessOne.height);
-                $("#canvasLessOneFull").text(1)
-            }
+            var idata = new ImageData(new Uint8ClampedArray(rgb_diff),canvas.width,canvas.height);
+            canvasDiff.getContext('2d').putImageData(idata,0,0);
+            debugger;
+            
+            console.log($("#canvasLessTwoFull").text());
+            debugger;
+
+            // if($("#canvasLessTwoFull").text()==="0")
+            // {
+            //     canvasLessTwo.getContext('2d').drawImage(video, 0, 0, canvasLessTwo.width, canvasLessTwo.height);
+            //     $("#canvasLessTwoFull").text(1)
+            // }
+            // if($("#canvasLessOneFull").text()==="0")
+            // {
+            //     canvasLessOne.getContext('2d').drawImage(video, 0, 0, canvasLessOne.width, canvasLessOne.height);
+            //     $("#canvasLessOneFull").text(1)
+            // }
             while (dontStop)
             {
+                console.log(2);
+                canvas.getContext('2d').drawImage(video, 0, 0, canvasLessOne.width, canvasLessOne.height);
+                // var imgData = canvas.getImageData(0, 0, canvas.width-1, canvas.height-1);
+                // var img = new Image();
+                // // img.onload = function() {
+                // //     canvas.drawImage(img, 0, 0);
+                // //     img.style.display = 'none';
+                // // };
+                console.log(3);
                 
             }
 
