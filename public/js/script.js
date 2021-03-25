@@ -52,8 +52,34 @@ socket.on('create', (user) => {
       }
     });
   });
-  socket.on('user-disconnected', (id) => {
-    console.log(id);
+});
+
+socket.on('addUser', (user) => {
+  const children = document.querySelectorAll('.userName');
+  audioUsers = [];
+  children.forEach((child) => {
+    audioUsers.push(child.innerHTML);
+  });
+  const filter = audioUsers.filter((i) => i === user);
+  if (filter.length === 0) {
+    $('#appendAudio').append(`<li class='userName'>${user}</li>`);
+  }
+});
+
+socket.on('user-disconnected', async (user) => {
+  const children = document.querySelectorAll('.userName');
+  children.forEach((child) => {
+    if (child.innerHTML === user.name) {
+      child.remove();
+    }
+  });
+});
+
+socket.on('audioUsers', (users, roomID) => {
+  users.forEach((user) => {
+    if ((user.audio.channel = roomID)) {
+      $('#appendAudio').append(`<li class='userName'>${user.name}</li>`);
+    }
   });
 });
 
@@ -125,7 +151,7 @@ const logout = async () => {
 
 const joinAudio = async (name) => {
   console.log('audio join fired');
-  socket.emit('audio-joined', $('#audioChannel1').attr('data-channel'), name);
+  socket.emit('audio-joined', $('#audioChannel1').attr('data-audio'), name);
 };
 
 $('#logout').on('click', function (event) {
@@ -166,7 +192,11 @@ $('#audioChannel1').on('click', () => {
   } else {
     children.forEach((child) => {
       if (child.innerHTML !== userName) {
-        $('#appendAudio').append(`<li class='userName'>${userName}</li>`);
+        socket.emit(
+          'userJoin',
+          userName,
+          $('#audioChannel1').attr('data-room')
+        );
         joinAudio(userName);
       }
     });
