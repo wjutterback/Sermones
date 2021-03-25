@@ -55,7 +55,6 @@ const socketRoutes = require('./routes/socketRoutes')(io);
 
 app.use(socketRoutes);
 
-//default port for HTTPS is 443, in dev we need to use a different one
-sequelize.sync({ force: true }).then(() => {
+sequelize.sync().then(() => {
   httpServer.listen(PORT, () => console.log(`Listening on port: ${PORT}`));
 });
