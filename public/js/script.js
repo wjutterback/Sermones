@@ -1,44 +1,34 @@
-let myStream;
-
 socket.on('create', (user) => {
-  navigator.mediaDevices
-    .getUserMedia({ video: false, audio: true })
-    .then((stream) => {
-      myStream = stream;
-      console.log(myStream);
-    });
   // heroku
   const peer = new Peer(undefined, {
     host: 'peerjs-isw.herokuapp.com',
   });
 
   //localhost
-  //   const peer = new Peer(undefined, {
-  //     host: '/',
-  //     path: '/peerjs',
-  //     port: 3030,
-  //   });
+  // const peer = new Peer(undefined, {
+  //   host: '/',
+  //   path: '/peerjs',
+  //   port: 3030,
+  // });
 
   peer.on('open', function (id) {
     socket.emit('created', id, user);
-    console.log('on open', myStream);
   });
 
   peer.on('call', (incomingCall) => {
     navigator.mediaDevices
       .getUserMedia({ video: false, audio: true })
       .then((stream) => {
-        myStream = stream;
+        const myStream = stream;
         console.log(myStream);
         console.log('incoming stream triggered');
         incomingCall.answer(myStream);
         incomingCall.on('stream', (incomingStream) => {
           const audio = document.createElement('audio');
-          audio.style.display = 'none';
-          document.body.appendChild(audio);
 
           audio.srcObject = incomingStream;
           audio.play();
+          document.body.appendChild(audio);
         });
       });
   });
@@ -49,16 +39,14 @@ socket.on('create', (user) => {
         navigator.mediaDevices
           .getUserMedia({ video: false, audio: true })
           .then((stream) => {
-            myStream = stream;
+            const myStream = stream;
             console.log(myStream);
             let call = peer.call(peerId, myStream);
             call.on('stream', function (incomingStream) {
               const audio = document.createElement('audio');
-              audio.style.display = 'none';
-              document.body.appendChild(audio);
-
               audio.srcObject = incomingStream;
               audio.play();
+              document.body.appendChild(audio);
             });
           });
       }
@@ -149,13 +137,13 @@ $('#logout').on('click', function (event) {
 
 $('#createAccount').on('click', function (event) {
   event.preventDefault();
-  localStorage.setItem('username',$('#id').val());
+  localStorage.setItem('username', $('#id').val());
   signup($('#id').val(), $('#pw').val());
 });
 
 $('#signIn').on('click', function (event) {
   event.preventDefault();
-  localStorage.setItem('username',$('#id').val());
+  localStorage.setItem('username', $('#id').val());
   login($('#id').val(), $('#pw').val());
 });
 
