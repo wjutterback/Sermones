@@ -138,13 +138,79 @@ $('#signIn').on('click', function (event) {
 
 $('#chat-message').keydown(function (e) {
   if (e.which === 13 && $('#chat-message').val().length !== 0) {
+    const text = $('#chat-message').val().trim();
+    const id = $('#room').attr('data-room');
+    const response = fetch(`/room/${id}`, {
+      method: 'POST',
+      body: JSON.stringify({text}),
+      headers: { 'Content-Type': 'application/json' },
+    });
     socket.emit('message', $('#chat-message').val());
     $('#chat-message').val('');
+    if (response.ok){
+      console.log(response);
+    }
   }
 });
+//TODO: Get the user id added to json attribute in the Room object
+// $('#addCode').keydown (async function (e) {
+//   const code = $('#addCode').val().trim();
+//   if (e.which === 13 && $('#addCode').val().length !== 0) {
+//     const response = await fetch('/rooms', {
+//       method: 'PUT',
+//       body: JSON.stringify({ code}),
+//       headers: {'Content-Type': 'application/json',},
+//     });
+//     console.log(response);
+//     if (response.ok){
+//       location.reload();
+//     }else{
+//       alert('FAIL');
+//     }
+//   }
+// });
 
 $('#audioChannel1').on('click', () => {
   const userName = $('#audioChannel1').attr('data-name');
   $('#appendAudio').append(`<li>${userName}</li>`);
   joinAudio();
 });
+
+$('#makeRoom').on('click', async () => {
+  const title = $('#roomTitle').val().trim();
+  if(title){
+    const response = await fetch('/rooms', {
+      method: 'POST',
+      body: JSON.stringify({title}),
+      headers: { 'Content-Type': 'application/json' },
+    });
+    if (response.ok){
+      location.reload();
+    }else{
+      return;
+    }
+  }
+});
+
+$('#addBtn').on('click', () => {
+  $('#modalBg').fadeIn();
+});
+
+$('#closeModal').on('click', () => {
+  $('#roomTitle').val('');
+  $('#addCode').val('');
+  $('#modalBg').fadeOut();
+});
+
+const copyRoom = (btn) =>{
+  const code = $(btn).attr('data-code');
+  const el = $('<textarea>');
+  $(el).val(code);
+  $(el).css('position', 'absolute');
+  $(el).css('left', '-99999px');
+  $('body').append(el);
+  el.select();
+  document.execCommand('copy');
+  $(el).remove();
+
+};

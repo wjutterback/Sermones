@@ -52,3 +52,41 @@ body{
     border: none;
 }
 
+button{
+  border: none;
+  outline: none;
+}
+
+#addBtn{
+  position: fixed;
+  bottom: 25px;
+  right: 25px;
+  border-radius: 5px;
+}
+
+#modalBg{
+  background-color: rgba(0, 0, 0, 0.562);
+  width: 100vw;
+  height: 100vh;
+  top: 0px;
+  left: 0px;
+  z-index: 555;
+  position: fixed;
+  transition: .3s;
+}
+
+#modal{
+  position: fixed;
+left: 50%;
+top: 50%;
+transform: translate(-50%,-50%);
+z-index: 999;
+}
+
+input{
+  outline: none;
+}
+
+textarea {
+  resize: none;
+}

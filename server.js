@@ -6,7 +6,7 @@ const exphbs = require('express-handlebars');
 const sequelize = require('./config/connection');
 const routes = require('./routes/routes');
 const SequelizeStore = require('connect-session-sequelize')(session.Store);
-
+const helpers = require('./utils/helpers.js');
 const app = express();
 const PORT = process.env.PORT || 3030;
 
@@ -14,7 +14,7 @@ const PORT = process.env.PORT || 3030;
 const hbs = exphbs.create({
   layoutsDir: path.join(__dirname, '/views/layouts'),
   partialsDir: path.join(__dirname, '/views'),
-  extname: '.hbs',
+  extname: '.hbs',helpers,
 });
 
 //Session Set-Up

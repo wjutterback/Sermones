@@ -1,12 +1,69 @@
 const router = require('express').Router();
+const Room = require('../models/Room');
 const User = require('../models/User');
+const Message = require('../models/Message');
+const { v4: uuidv4 } = require('uuid');
+const { sequelize } = require('../models/User');
+const Sequelize = require('sequelize');
+const Op = Sequelize.Op;
 
 router.get('/', (req, res) => {
   res.render('homepage', { loggedIn: req.session.loggedIn });
 });
 
-router.get('/rooms', (req, res) => {
-  res.render('room', { loggedIn: req.session.loggedIn });
+router.get('/rooms', async (req, res) => {
+  try{
+    const roomData = await Room.findAll(
+      //TODO: add back when updating attribute is working
+      // where: {
+      //   members_id:{
+      //     [Op.like]: req.session.userId
+      //   }
+      // }
+    );
+    const rooms = roomData.map((room) => room.get({ plain: true }));
+    console.log(rooms);
+    res.render('room',
+      { rooms,
+        loggedIn: req.session.loggedIn });
+  }catch(err){
+    res.status(500).json(err);
+  }
+});
+//TODO: Get the user id added to json attribute in the Room object
+// router.put('/rooms', async (req,res) => {
+//   try{
+//     await Room.findOne({
+//       where: {code: req.body.code}
+//     }).then(async()=>{
+//       try{
+//         const codeData = await Room.update({
+//           members_id:req.session.userId
+//         },{
+//           where: {code: req.body.code}
+//         });
+//         res.status(200).json(codeData);
+//       }catch(err){
+//         res.status(500).json(err);
+//       }
+//     });
+//   }catch(err){
+//     res.status(404).json(err);
+//   }
+// });
+
+router.post('/rooms', async (req,res) => {
+  try{
+    const roomDATA = await Room.create({
+      title: req.body.title,
+      code: uuidv4(),
+      members_id:req.session.userId,
+    });
+    console.log(roomDATA);
+    res.status(200).send(roomDATA);
+  }catch(err){
+    res.status(400).send(err);
+  }
 });
 
 router.get('/sign-in', (req, res) => {
@@ -84,14 +141,43 @@ router.post('/sign-up', async (req, res) => {
   }
 });
 
-router.get('/room/:id', (req, res) => {
+router.get('/room/:id', async (req, res) => {
   const roomID = req.params.id;
   const userName = req.session.name;
-  res.render('roomchat', {
-    loggedIn: req.session.loggedIn,
-    name: userName,
-    roomID: roomID,
-  });
+  try{
+    const messageData = await Message.findAll({
+      where:{
+        room_id:roomID
+      },
+      include:[{
+        model: User,
+        attributes: ['name'],
+      }]
+    });
+    const messages = messageData.map((message) => message.get({ plain: true }));
+    res.render('roomchat', {
+      messages,
+      loggedIn: req.session.loggedIn,
+      name: userName,
+      roomID: roomID,
+    });
+  }catch(err){
+    res.status(500).json(err);
+  }
+});
+
+router.post('/room/:id', async (req, res) => {
+  try{
+    const MessageDATA = await Message.create({
+      text: req.body.text,
+      room_id:req.params.id,
+      user_id:[req.session.userId],
+    });
+    console.log(MessageDATA);
+    res.status(200).send(MessageDATA);
+  }catch(err){
+    res.status(400).send(err);
+  }
 });
 
 router.post('/logout', (req, res) => {

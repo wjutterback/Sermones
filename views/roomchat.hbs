@@ -1,5 +1,5 @@
 
-<div class="row main m-auto w-100" style="color: #d8d7df;">
+<div id="room" data-room="{{roomID}}" class="row main m-auto w-100" style="color: #d8d7df;">
   <div style="background-color: #2d2f35;;" class="col-2 p-4  h-100">
     <div class="row g-0 text-start">
       <button type="button" class="btn p-0 w-100 text-start btn-link" id="audioChannel1" data-name="{{name}}" data-room="{{roomID}}"
@@ -17,15 +17,24 @@
         #1</a>
     </div>
   </div>
-  <div style="background-color: #363940;" class="col-xl p-4 g-0">
+  <div style="background-color: #363940; max-height: 97%" class="col-xl p-4 g-0">
     <div class="row mb-3 g-0 chat-header text-center mx-auto border-bottom border-primary">
       <h6>Chat</h6>
     </div>
-    <div class="row" style="height: 94%; max-height: 94%;">
+    <div class="row" style="height: 97%; max-height: 97%;">
       <div class="row g-0 w-100 chat-window">
 
       <ul id="chatCards" class="messages g-0">
-
+{{#each messages as |message| }}
+   <div  class="row card mb-2 p-3 message-card">
+  <div class="card-header p-1" style="background-color: transparent; border: none;">
+    {{message.user.name}} <small class="text-muted">{{format_date message.date_created}}</small>
+  </div>
+  <div class="card-body p-1">
+    {{message.text}}
+  </div>
+</div>
+{{/each}}
       </ul>
 
 
