@@ -90,21 +90,61 @@ socket.on('audioUsers', (users, roomID) => {
 socket.on('dmMessages', (messages) => {
   messages.forEach((message) => {
     console.log(message);
+    const htmlState = document.querySelectorAll('#msgName');
+    if (htmlState.length === 0) {
+      const dm = $(document.createElement('div'));
+      dm.html(`<div  class="row card mb-2 p-3 message-card">
+      <div class="card-header p-1" style="background-color: transparent; border: none;">
+      <small class="text-muted">${new Date(
+        message.createdAt
+      ).getMonth()}/${new Date(message.createdAt).getDate()}/${new Date(
+        message.createdAt
+      ).getFullYear()}
+          </small><div><button id="msgName">${message.name}</button></div>
+          </div>
+          </div>`);
+      $('#directMessages').append(dm);
+    } else {
+      htmlState.forEach((user) => {
+        console.log(user);
+        console.log('innerHTML', user.innerHTML, 'message.name', message.name);
+        if (user.innerHTML === message.name || htmlState.length === 0) {
+        } else {
+          console.log('in the else');
+          const dm = $(document.createElement('div'));
+          dm.html(`<div  class="row card mb-2 p-3 message-card">
+        <div class="card-header p-1" style="background-color: transparent; border: none;">
+        <small class="text-muted">${new Date(
+          message.createdAt
+        ).getMonth()}/${new Date(message.createdAt).getDate()}/${new Date(
+            message.createdAt
+          ).getFullYear()}
+            </small><div><button id="msgName">${message.name}</button></div>
+            </div>
+            </div>`);
+          $('#directMessages').append(dm);
+        }
+      });
+    }
+  });
+});
+
+socket.on('populateDM', (messages) => {
+  messages.forEach((message) => {
     const dm = $(document.createElement('div'));
     dm.html(`<div  class="row card mb-2 p-3 message-card">
-      <div class="card-header p-1" style="background-color: transparent; border: none;">
-        ${message.name} <small class="text-muted">${new Date(
+    <div class="card-header p-1" style="background-color: transparent; border: none;">
+    <small class="text-muted">${new Date(
       message.createdAt
     ).getMonth()}/${new Date(message.createdAt).getDate()}/${new Date(
       message.createdAt
-    ).getFullYear()}
-    </small>
-      </div>
-      <div class="card-body p-1">
-        ${message.text}
-      </div>
-    </div>`);
-    $('#directMessages').append(dm);
+    ).getFullYear()} - ${new Date(message.createdAt).getHours()}:${new Date(
+      message.createdAt
+    ).getMinutes()}:${new Date(message.createdAt).getSeconds()}
+        </small><div>${message.name} - ${message.text}</div>
+        </div>
+        </div>`);
+    $('#chatCards').append(dm);
   });
 });
 
@@ -270,6 +310,13 @@ $('#dm-input').keydown(function (e) {
       localStorage.getItem('username')
     );
     $('#dm-input').val('');
+  }
+});
+
+document.addEventListener('click', function (e) {
+  if (e.target.id === 'msgName') {
+    console.log(e);
+    socket.emit('getDM', $('#msgName').text());
   }
 });
 
