@@ -87,6 +87,27 @@ socket.on('audioUsers', (users, roomID) => {
   });
 });
 
+socket.on('dmMessages', (messages) => {
+  messages.forEach((message) => {
+    console.log(message);
+    const dm = $(document.createElement('div'));
+    dm.html(`<div  class="row card mb-2 p-3 message-card">
+      <div class="card-header p-1" style="background-color: transparent; border: none;">
+        ${message.name} <small class="text-muted">${new Date(
+  message.createdAt
+).getMonth()}/${new Date(message.createdAt).getDate()}/${new Date(
+  message.createdAt
+).getFullYear()}
+    </small>
+      </div>
+      <div class="card-body p-1">
+        ${message.text}
+      </div>
+    </div>`);
+    $('#directMessages').append(dm);
+  });
+});
+
 socket.on('createMessage', (message, username) => {
   const messageBody = $('<div>');
   messageBody.html(`<div  class="row card mb-2 p-3 message-card">
@@ -204,5 +225,17 @@ $('#audioChannel1').on('click', () => {
         joinAudio(userName);
       }
     });
+  }
+});
+
+$('#dm-input').keydown(function (e) {
+  if (e.which === 13 && $('#dm-input').val().length !== 0) {
+    socket.emit(
+      'dm-message',
+      $('#dm-name').val(),
+      $('#dm-input').val(),
+      localStorage.getItem('username')
+    );
+    $('#dm-input').val('');
   }
 });
