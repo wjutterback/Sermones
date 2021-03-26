@@ -19,13 +19,16 @@ module.exports = (io) => {
         const receiverUser = await User.findOne({
           where: { name: receiverName },
         });
-        await DM.create({
-          senderId: senderUser.id,
-          receiverId: receiverUser.id,
-          text: receiverMessage,
-        });
+        if (senderUser && receiverUser) {
+          await DM.create({
+            senderId: senderUser.id,
+            receiverId: receiverUser.id,
+            text: receiverMessage,
+          });
+        }
       }
     );
+
     socket.on('update-messages', async (username) => {
       const user = await User.findOne({ where: { name: username } });
       const userMessages = await sequelize.query(
