@@ -1,30 +1,29 @@
-*{
+* {
   font-family: 'Montserrat', sans-serif;
   color: #d8d7df;
 }
 
-a{
+a {
   text-decoration: none;
   color: #d8d7df;
 }
 
-body{
+body {
   height: 94.1vh;
   overflow: hidden;
 }
 
-.audioSection{
+.audioSection {
   max-height: 400px;
   overflow-x: hidden;
 }
 
-.chat-window{
+.chat-window {
   height: 96%;
   overflow-x: hidden;
-  
 }
 
-.main{
+.main {
   height: 100%;
 }
 
@@ -37,7 +36,6 @@ body{
 ::-webkit-scrollbar-track {
   background-color: #363940;
   border-radius: 25px;
-  
 }
 
 /* Handle */
@@ -46,10 +44,9 @@ body{
   border-radius: 25px;
 }
 
-
-.message-card{
-    background-color: transparent;
-    border: none;
+.message-card {
+  background-color: transparent;
+  border: none;
 }
 
 button{
@@ -90,3 +87,7 @@ input{
 textarea {
   resize: none;
 }
+audio {
+  display: 'none';
+}
+

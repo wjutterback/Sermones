@@ -70,6 +70,10 @@ router.get('/sign-in', (req, res) => {
   res.render('sign-in', { loggedIn: req.session.loggedIn });
 });
 
+router.get('/messages', (req, res) => {
+  res.render('dm', { loggedIn: req.session.loggedIn });
+});
+
 router.post('/sign-in', async (req, res) => {
   try {
     const dbUserData = await User.findOne({
