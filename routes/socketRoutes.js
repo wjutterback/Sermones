@@ -29,6 +29,18 @@ module.exports = (io) => {
       }
     );
 
+    socket.on('getDM', async (user) => {
+      console.log(user);
+      const userMessages = await sequelize.query(
+        'SELECT dms.text, users.name, dms.createdAt FROM dms LEFT JOIN users on users.id = dms.senderId WHERE users.name = ?',
+        {
+          replacements: [`${user}`],
+          type: Sequelize.QueryTypes.SELECT,
+        }
+      );
+      socket.emit('populateDM', userMessages);
+    });
+
     socket.on('update-messages', async (username) => {
       const user = await User.findOne({ where: { name: username } });
       const userMessages = await sequelize.query(
