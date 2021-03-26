@@ -1,13 +1,41 @@
 const { Sequelize } = require('sequelize');
 const Audio = require('../models/Audio');
+const DM = require('../models/DM');
 const User = require('../models/User');
 const Op = Sequelize.Op;
 const router = require('express').Router();
+const sequelize = require('../config/connection');
 
 module.exports = (io) => {
   io.on('connection', async (socket) => {
     socket.on('update-socket', async (username) => {
       await User.update({ socketId: socket.id }, { where: { name: username } });
+    });
+
+    socket.on(
+      'dm-message',
+      async (receiverName, receiverMessage, senderName) => {
+        const senderUser = await User.findOne({ where: { name: senderName } });
+        const receiverUser = await User.findOne({
+          where: { name: receiverName },
+        });
+        await DM.create({
+          senderId: senderUser.id,
+          receiverId: receiverUser.id,
+          text: receiverMessage,
+        });
+      }
+    );
+    socket.on('update-messages', async (username) => {
+      const user = await User.findOne({ where: { name: username } });
+      const userMessages = await sequelize.query(
+        'SELECT dms.text, users.name, dms.createdAt FROM dms LEFT JOIN users on users.id = dms.senderId WHERE dms.receiverId = ?',
+        {
+          replacements: [`${user.id}`],
+          type: Sequelize.QueryTypes.SELECT,
+        }
+      );
+      socket.emit('dmMessages', userMessages);
     });
 
     socket.on('audio-joined', async (channel, name) => {
@@ -51,11 +79,7 @@ module.exports = (io) => {
       console.log('room joined fired');
       const getAudioUsers = await User.findAll({
         where: { audioId: { [Op.not]: null } },
-        include: [
-          {
-            model: Audio,
-          },
-        ],
+        include: [{ model: Audio }],
       });
       io.to(socket.id).emit('audioUsers', getAudioUsers, roomID);
       socket.join(`${roomID}`);
