@@ -108,6 +108,11 @@ socket.on('dmMessages', (messages) => {
   });
 });
 
+const scrollToBottom = () => {
+  const chatWindow = $('.chat-window');
+  chatWindow.scrollTop(chatWindow.prop('scrollHeight'));
+};
+
 socket.on('createMessage', (message, username) => {
   const messageBody = $('<div>');
   messageBody.html(`<div  class="row card mb-2 p-3 message-card">
@@ -119,6 +124,7 @@ socket.on('createMessage', (message, username) => {
   </div>
 </div>`);
   $('#chatCards').append(messageBody);
+  scrollToBottom();
 });
 
 async function signup(name, password) {
@@ -179,11 +185,6 @@ const joinAudio = async (name) => {
   socket.emit('audio-joined', $('#audioChannel1').attr('data-audio'), name);
 };
 
-const scrollToBottom = () => {
-  const chatWindow = $('.chat-window');
-  chatWindow.scrollTop(chatWindow.prop('scrollHeight'));
-};
-
 $('#logout').on('click', function (event) {
   event.preventDefault();
   localStorage.removeItem('username');
@@ -217,7 +218,6 @@ $('#chat-message').keydown(function (e) {
       localStorage.getItem('username')
     );
     $('#chat-message').val('');
-    scrollToBottom();
     if (response.ok) {
       console.log(response);
     }
