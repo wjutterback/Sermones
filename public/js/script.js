@@ -94,10 +94,10 @@ socket.on('dmMessages', (messages) => {
     dm.html(`<div  class="row card mb-2 p-3 message-card">
       <div class="card-header p-1" style="background-color: transparent; border: none;">
         ${message.name} <small class="text-muted">${new Date(
-  message.createdAt
-).getMonth()}/${new Date(message.createdAt).getDate()}/${new Date(
-  message.createdAt
-).getFullYear()}
+      message.createdAt
+    ).getMonth()}/${new Date(message.createdAt).getDate()}/${new Date(
+      message.createdAt
+    ).getFullYear()}
     </small>
       </div>
       <div class="card-body p-1">
@@ -179,6 +179,11 @@ const joinAudio = async (name) => {
   socket.emit('audio-joined', $('#audioChannel1').attr('data-audio'), name);
 };
 
+const scrollToBottom = () => {
+  const chatWindow = $('.chat-window');
+  chatWindow.scrollTop(chatWindow.prop('scrollHeight'));
+};
+
 $('#logout').on('click', function (event) {
   event.preventDefault();
   localStorage.removeItem('username');
@@ -203,7 +208,7 @@ $('#chat-message').keydown(function (e) {
     const id = $('#room').attr('data-room');
     const response = fetch(`/room/${id}`, {
       method: 'POST',
-      body: JSON.stringify({text}),
+      body: JSON.stringify({ text }),
       headers: { 'Content-Type': 'application/json' },
     });
     socket.emit(
@@ -212,7 +217,8 @@ $('#chat-message').keydown(function (e) {
       localStorage.getItem('username')
     );
     $('#chat-message').val('');
-    if (response.ok){
+    scrollToBottom();
+    if (response.ok) {
       console.log(response);
     }
   }
@@ -269,15 +275,15 @@ $('#dm-input').keydown(function (e) {
 
 $('#makeRoom').on('click', async () => {
   const title = $('#roomTitle').val().trim();
-  if(title){
+  if (title) {
     const response = await fetch('/rooms', {
       method: 'POST',
-      body: JSON.stringify({title}),
+      body: JSON.stringify({ title }),
       headers: { 'Content-Type': 'application/json' },
     });
-    if (response.ok){
+    if (response.ok) {
       location.reload();
-    }else{
+    } else {
       return;
     }
   }
@@ -293,7 +299,7 @@ $('#closeModal').on('click', () => {
   $('#modalBg').fadeOut();
 });
 
-const copyRoom = (btn) =>{
+const copyRoom = (btn) => {
   const code = $(btn).attr('data-code');
   const el = $('<textarea>');
   $(el).val(code);
@@ -303,5 +309,4 @@ const copyRoom = (btn) =>{
   el.select();
   document.execCommand('copy');
   $(el).remove();
-
 };
