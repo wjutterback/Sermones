@@ -16,39 +16,44 @@ socket.on('create', (user) => {
   });
 
   peer.on('call', (incomingCall) => {
-    navigator.mediaDevices
-      .getUserMedia({ video: false, audio: true })
-      .then((stream) => {
-        const myStream = stream;
-        console.log(myStream);
-        console.log('incoming stream triggered');
-        incomingCall.answer(myStream);
-        incomingCall.on('stream', (incomingStream) => {
-          const audio = document.createElement('audio');
+    const getUserMedia =
+      navigator.getUserMedia ||
+      navigator.webkitGetUserMedia ||
+      navigator.mozGetUserMedia;
 
-          audio.srcObject = incomingStream;
-          audio.play();
-          document.body.appendChild(audio);
-        });
+    getUserMedia({ video: false, audio: true }).then((stream) => {
+      const myStream = stream;
+      console.log(myStream);
+      console.log('incoming stream triggered');
+      incomingCall.answer(myStream);
+      incomingCall.on('stream', (incomingStream) => {
+        const audio = document.createElement('audio');
+
+        audio.srcObject = incomingStream;
+        audio.play();
+        document.body.appendChild(audio);
       });
+    });
   });
 
   socket.on('user-connected', (id, peers) => {
     peers.forEach((peerId) => {
       if (peerId !== id) {
-        navigator.mediaDevices
-          .getUserMedia({ video: false, audio: true })
-          .then((stream) => {
-            const myStream = stream;
-            console.log(myStream);
-            let call = peer.call(peerId, myStream);
-            call.on('stream', function (incomingStream) {
-              const audio = document.createElement('audio');
-              audio.srcObject = incomingStream;
-              audio.play();
-              document.body.appendChild(audio);
-            });
+        const getUserMedia =
+          navigator.getUserMedia ||
+          navigator.webkitGetUserMedia ||
+          navigator.mozGetUserMedia;
+        getUserMedia({ video: false, audio: true }).then((stream) => {
+          const myStream = stream;
+          console.log(myStream);
+          let call = peer.call(peerId, myStream);
+          call.on('stream', function (incomingStream) {
+            const audio = document.createElement('audio');
+            audio.srcObject = incomingStream;
+            audio.play();
+            document.body.appendChild(audio);
           });
+        });
       }
     });
   });
