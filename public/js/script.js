@@ -16,44 +16,39 @@ socket.on('create', (user) => {
   });
 
   peer.on('call', (incomingCall) => {
-    const getUserMedia =
-      navigator.getUserMedia ||
-      navigator.webkitGetUserMedia ||
-      navigator.mozGetUserMedia;
+    navigator.mediaDevices
+      .getUserMedia({ video: false, audio: true })
+      .then((stream) => {
+        const myStream = stream;
+        console.log(myStream);
+        console.log('incoming stream triggered');
+        incomingCall.answer(myStream);
+        incomingCall.on('stream', (incomingStream) => {
+          const audio = document.createElement('audio');
 
-    getUserMedia({ video: false, audio: true }, function (stream) {
-      const myStream = stream;
-      console.log(myStream);
-      console.log('incoming stream triggered');
-      incomingCall.answer(myStream);
-      incomingCall.on('stream', (incomingStream) => {
-        const audio = document.createElement('audio');
-
-        audio.srcObject = incomingStream;
-        audio.play();
-        document.body.appendChild(audio);
+          audio.srcObject = incomingStream;
+          audio.play();
+          document.body.appendChild(audio);
+        });
       });
-    });
   });
 
   socket.on('user-connected', (id, peers) => {
     peers.forEach((peerId) => {
       if (peerId !== id) {
-        const getUserMedia =
-          navigator.getUserMedia ||
-          navigator.webkitGetUserMedia ||
-          navigator.mozGetUserMedia;
-        getUserMedia({ video: false, audio: true }, function (stream) {
-          const myStream = stream;
-          console.log(myStream);
-          let call = peer.call(peerId, myStream);
-          call.on('stream', function (incomingStream) {
-            const audio = document.createElement('audio');
-            audio.srcObject = incomingStream;
-            audio.play();
-            document.body.appendChild(audio);
+        navigator.mediaDevices
+          .getUserMedia({ video: false, audio: true })
+          .then((stream) => {
+            const myStream = stream;
+            console.log(myStream);
+            let call = peer.call(peerId, myStream);
+            call.on('stream', function (incomingStream) {
+              const audio = document.createElement('audio');
+              audio.srcObject = incomingStream;
+              audio.play();
+              document.body.appendChild(audio);
+            });
           });
-        });
       }
     });
   });
@@ -72,12 +67,16 @@ socket.on('addUser', (user) => {
 });
 
 socket.on('user-disconnected', async (user) => {
-  const children = document.querySelectorAll('.userName');
-  children.forEach((child) => {
-    if (child.innerHTML === user.name) {
-      child.remove();
-    }
-  });
+  try {
+    const children = document.querySelectorAll('.userName');
+    children.forEach((child) => {
+      if (child.innerHTML === user.name) {
+        child.remove();
+      }
+    });
+  } catch (err) {
+    console.log(err);
+  }
 });
 
 socket.on('audioUsers', (users, roomID) => {
