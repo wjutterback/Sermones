@@ -21,7 +21,7 @@ socket.on('create', (user) => {
       navigator.webkitGetUserMedia ||
       navigator.mozGetUserMedia;
 
-    getUserMedia({ video: false, audio: true }).then((stream) => {
+    getUserMedia({ video: false, audio: true }, function (stream) {
       const myStream = stream;
       console.log(myStream);
       console.log('incoming stream triggered');
@@ -43,7 +43,7 @@ socket.on('create', (user) => {
           navigator.getUserMedia ||
           navigator.webkitGetUserMedia ||
           navigator.mozGetUserMedia;
-        getUserMedia({ video: false, audio: true }).then((stream) => {
+        getUserMedia({ video: false, audio: true }, function (stream) {
           const myStream = stream;
           console.log(myStream);
           let call = peer.call(peerId, myStream);
