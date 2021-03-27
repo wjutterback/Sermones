@@ -14,7 +14,8 @@ const PORT = process.env.PORT || 3030;
 const hbs = exphbs.create({
   layoutsDir: path.join(__dirname, '/views/layouts'),
   partialsDir: path.join(__dirname, '/views'),
-  extname: '.hbs',helpers,
+  extname: '.hbs',
+  helpers,
 });
 
 //Session Set-Up

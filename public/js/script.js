@@ -100,7 +100,9 @@ socket.on('dmMessages', (messages) => {
       ).getMonth()}/${new Date(message.createdAt).getDate()}/${new Date(
         message.createdAt
       ).getFullYear()}
-          </small><div><button id="msgName">${message.name}</button></div>
+          </small><div><button id="msgName" class="btn text-light">${
+            message.name
+          }</button></div>
           </div>
           </div>`);
       $('#directMessages').append(dm);
@@ -119,7 +121,9 @@ socket.on('dmMessages', (messages) => {
         ).getMonth()}/${new Date(message.createdAt).getDate()}/${new Date(
             message.createdAt
           ).getFullYear()}
-            </small><div><button id="msgName">${message.name}</button></div>
+            </small><div><button id="msgName" class="btn text-light">${
+              message.name
+            }</button></div>
             </div>
             </div>`);
           $('#directMessages').append(dm);
@@ -233,13 +237,11 @@ $('#logout').on('click', function (event) {
 
 $('#createAccount').on('click', function (event) {
   event.preventDefault();
-  localStorage.setItem('username', $('#id').val());
   signup($('#id').val(), $('#pw').val());
 });
 
 $('#signIn').on('click', function (event) {
   event.preventDefault();
-  localStorage.setItem('username', $('#id').val());
   login($('#id').val(), $('#pw').val());
 });
 
@@ -264,25 +266,26 @@ $('#chat-message').keydown(function (e) {
   }
 });
 //TODO: Get the user id added to json attribute in the Room object
-// $('#addCode').keydown (async function (e) {
-//   const code = $('#addCode').val().trim();
-//   if (e.which === 13 && $('#addCode').val().length !== 0) {
-//     const response = await fetch('/rooms', {
-//       method: 'PUT',
-//       body: JSON.stringify({ code}),
-//       headers: {'Content-Type': 'application/json',},
-//     });
-//     console.log(response);
-//     if (response.ok){
-//       location.reload();
-//     }else{
-//       alert('FAIL');
-//     }
-//   }
-// });
+$('#makeRoomCode').on('click', async function () {
+  const code = $('#addCode').val().trim();
+  console.log(code);
+  if ($('#addCode').val().length !== 0) {
+    const response = await fetch('/roomscode', {
+      method: 'POST',
+      body: JSON.stringify({ code }),
+      headers: { 'Content-Type': 'application/json' },
+    });
+    console.log(response);
+    if (response.ok) {
+      location.reload();
+    } else {
+      alert('FAIL');
+    }
+  }
+});
 
 $('#audioChannel1').on('click', () => {
-  const userName = $('#audioChannel1').attr('data-name');
+  const userName = localStorage.getItem('username');
   const children = document.querySelectorAll('.userName');
   if (children.length === 0) {
     $('#appendAudio').append(`<li class='userName'>${userName}</li>`);
@@ -316,7 +319,7 @@ $('#dm-input').keydown(function (e) {
 document.addEventListener('click', function (e) {
   if (e.target.id === 'msgName') {
     console.log(e);
-    socket.emit('getDM', $('#msgName').text());
+    socket.emit('getDM', e.target.innerText);
   }
 });
 
@@ -357,3 +360,11 @@ const copyRoom = (btn) => {
   document.execCommand('copy');
   $(el).remove();
 };
+
+const updateLocalStorage = () => {
+  const name = $('#select').attr('data-name');
+  localStorage.setItem('username', name);
+  socket.emit('update-socket', localStorage.getItem('username'));
+};
+
+updateLocalStorage();

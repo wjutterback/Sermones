@@ -37,6 +37,10 @@ User.init(
       type: DataTypes.INTEGER,
       allowNull: true,
     },
+    roomId: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+    },
   },
   {
     hooks: {
