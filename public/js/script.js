@@ -64,6 +64,11 @@ socket.on('create', (user) => {
   });
 });
 
+const scrollToBottom = () => {
+  const chatWindow = $('.chat-window');
+  chatWindow.scrollTop(chatWindow.prop('scrollHeight'));
+};
+
 socket.on('addUser', (user) => {
   const children = document.querySelectorAll('.userName');
   audioUsers = [];
@@ -98,28 +103,22 @@ socket.on('audioUsers', (users, roomID) => {
 });
 
 socket.on('newDM', (message, senderName) => {
-  console.log(message);
   if (
     window.location.pathname === '/messages' &&
-    $('#dmSender').text() === senderName
+    $('#chatter').text() === senderName
   ) {
     const dm = $(document.createElement('div'));
     dm.html(`<div  class="row card mb-2 p-3 message-card">
-    <div class="card-header p-1" style="background-color: transparent; border: none;">
-    <small class="text-muted">${new Date(
+    <div id="dmReceiver" class="card-header p-1" style="background-color: transparent; border: none;">
+    ${senderName}<small class="text-muted">${new Date(
       message.createdAt
-    ).getMonth()}/${new Date(message.createdAt).getDate()}/${new Date(
-      message.createdAt
-    ).getFullYear()} - ${new Date(message.createdAt).getHours()}:${new Date(
-      message.createdAt
-    ).getMinutes()}:${new Date(message.createdAt).getSeconds()}
-        </small><div id="dmSender">${senderName}</div><div> - ${
-      message.text
-    }</div>
+    ).toLocaleString()}
+        </small><div class="card-body p-1"> ${message.text}</div>
         </div>
         </div>`);
     console.log(dm);
     $('#chatCards').append(dm);
+    scrollToBottom();
   }
 });
 
@@ -138,7 +137,6 @@ socket.on('dmMessages', (messages) => {
     messageArr.push(message.name);
   });
   let uniqueSender = [...new Set(messageArr)];
-  console.log(uniqueSender);
   uniqueSender.forEach((user) => {
     const dm = $(document.createElement('div'));
     dm.html(`<div  class="row card mb-2 p-3 message-card">
@@ -149,15 +147,8 @@ socket.on('dmMessages', (messages) => {
   });
 });
 
-const scrollToBottom = () => {
-  const chatWindow = $('.chat-window');
-  chatWindow.scrollTop(chatWindow.prop('scrollHeight'));
-};
-
 socket.on('populateDM', (messages) => {
-  console.log(messages);
   messages.forEach((message) => {
-    console.log(message);
     const dm = $(document.createElement('div'));
     dm.html(`<div  class="row card mb-2 p-3 message-card">
     <div id="dmSender" class="card-header p-1" style="background-color: transparent; border: none;">
@@ -166,7 +157,6 @@ socket.on('populateDM', (messages) => {
     ).toLocaleString()}
         </small> </div><div class="card-body p-1"> ${message.text}</div>
         </div>`);
-    console.log(dm);
     $('#chatCards').append(dm);
   });
   scrollToBottom();
@@ -338,6 +328,7 @@ document.addEventListener('click', function (e) {
   if (e.target.id === 'msgName') {
     if ($('#dmSender').text() !== e.target.innerText) {
       $('#chatCards').empty();
+      $('#chatter').text(`${e.target.innerText}`);
       socket.emit(
         'getDM',
         e.target.innerText,
