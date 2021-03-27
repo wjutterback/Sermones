@@ -26,6 +26,11 @@ module.exports = (io) => {
             text: receiverMessage,
           });
           io.to(receiverUser.socketId).emit('newDM', newDM, senderUser.name);
+          io.to(receiverUser.socketId).emit(
+            'notification',
+            newDM.text,
+            senderUser.name
+          );
         }
       }
     );
