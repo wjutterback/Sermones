@@ -96,6 +96,15 @@ module.exports = (io) => {
       io.to(room).emit('addUser', user);
     });
 
+    socket.on('userLeft', (user, room) => {
+      io.to(room).emit('removeUser', user);
+    });
+
+    socket.on('peerDestroy', async (username) => {
+      const user = await User.findOne({ where: { name: username } });
+      io.to(user.socketId).emit('diediedie');
+    });
+
     socket.on('room-joined', async (roomID) => {
       console.log('room joined fired');
       const getAudioUsers = await User.findAll({
