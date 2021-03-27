@@ -56,6 +56,6 @@ const socketRoutes = require('./routes/socketRoutes')(io);
 
 app.use(socketRoutes);
 
-sequelize.sync().then(() => {
+sequelize.sync({ force: true }).then(() => {
   httpServer.listen(PORT, () => console.log(`Listening on port: ${PORT}`));
 });
