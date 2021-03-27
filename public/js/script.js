@@ -87,6 +87,32 @@ socket.on('audioUsers', (users, roomID) => {
   });
 });
 
+socket.on('newDM', (message, senderName) => {
+  console.log(message);
+  if (
+    window.location.pathname === '/messages' &&
+    $('#dmSender').text() === senderName
+  ) {
+    const dm = $(document.createElement('div'));
+    dm.html(`<div  class="row card mb-2 p-3 message-card">
+    <div class="card-header p-1" style="background-color: transparent; border: none;">
+    <small class="text-muted">${new Date(
+      message.createdAt
+    ).getMonth()}/${new Date(message.createdAt).getDate()}/${new Date(
+      message.createdAt
+    ).getFullYear()} - ${new Date(message.createdAt).getHours()}:${new Date(
+      message.createdAt
+    ).getMinutes()}:${new Date(message.createdAt).getSeconds()}
+        </small><div id="dmSender">${senderName}</div><div> - ${
+      message.text
+    }</div>
+        </div>
+        </div>`);
+    console.log(dm);
+    $('#chatCards').append(dm);
+  }
+});
+
 socket.on('dmMessages', (messages) => {
   const messageArr = [];
   messages.forEach((message) => {
