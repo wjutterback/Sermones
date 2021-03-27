@@ -328,6 +328,7 @@ $('#dm-input').keydown(function (e) {
           </div>`);
     $('#chatCards').append(dm);
     $('#dm-input').val('');
+    scrollToBottom();
   }
 });
 
