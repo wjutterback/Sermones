@@ -424,18 +424,22 @@ $('#leaveVoice').on('click', async () => {
   socket.emit('peerDestroy', userName);
 });
 
-const notif = (message) => {
+const notif = (text, sender) => {
   const div = $('<div>');
   $(div).css('display', 'none');
   $(div).html(`<div id="alert" class="alert alert-dark" role="alert">
-  <h4 class="alert-heading">${message.name}
+  <h4 class="alert-heading">${sender}
   <small class="text-dark text-muted">${new Date().toLocaleString()}</small></h4>
   <hr>
-  <p class="text-primary">${message}</p>
-</div>`);
+  <p class="text-primary">${text}</p>
+  </div>`);
   $('body').append(div);
   $(div).fadeIn();
   setTimeout(function () {
     $(div).fadeOut();
   }, 5000);
 };
+
+socket.on('notification', (text, sender) => {
+  notif(text, sender);
+});
