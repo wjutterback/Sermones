@@ -268,16 +268,14 @@ $('#chat-message').keydown(function (e) {
 //TODO: Get the user id added to json attribute in the Room object
 $('#makeRoomCode').on('click', async function () {
   const code = $('#addCode').val().trim();
-  console.log(code);
-  if ($('#addCode').val().length !== 0) {
+  if (code) {
     const response = await fetch('/roomscode', {
       method: 'POST',
       body: JSON.stringify({ code }),
       headers: { 'Content-Type': 'application/json' },
     });
-    console.log(response);
     if (response.ok) {
-      location.reload();
+      document.location.replace('/rooms');
     } else {
       alert('FAIL');
     }
@@ -368,3 +366,19 @@ const updateLocalStorage = () => {
 };
 
 updateLocalStorage();
+
+$('#leaveRoom').on('click', async () => {
+  const user_id = $('#user').attr('data-user');
+  const room_id = $('#audioChannel1').attr('data-room');
+  const response = await fetch(`/room/${room_id}`, {
+    method: 'DELETE',
+    body: JSON.stringify({user_id, room_id}),
+    headers: { 'Content-Type': 'application/json' },
+  });
+
+  if (response.ok){
+    document.location.replace('/rooms');
+  }else {
+    alert('something went wrong!');
+  }
+});

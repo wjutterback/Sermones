@@ -162,6 +162,7 @@ router.get('/room/:id', async (req, res) => {
       messages,
       loggedIn: req.session.loggedIn,
       name: userName,
+      user_id: [req.session.userId],
       roomID: roomID,
     });
   } catch (err) {
@@ -190,6 +191,20 @@ router.post('/logout', (req, res) => {
     });
   } else {
     res.redirect('/');
+  }
+});
+
+router.delete('/room/:id', async (req, res)=> {
+  try{
+    const userData = await Room.destroy({
+      where:{
+        code: req.body.room_id,
+        userId: req.body.user_id
+      }
+    });
+    res.status(200).json(userData);
+  }catch(err){
+    res.status(500).json(err);
   }
 });
 

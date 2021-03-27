@@ -1,37 +1,44 @@
 
 
 
-  <div class="row container row-cols-5 p-3 m-auto w-100" style="background-color:#303136; max-height: 100%; overflow-x:hidden;">
-
+  <div  class="row container row-cols-5 p-3 m-auto w-100" style="background-color:#303136; max-height: 100%; overflow-x:hidden;">
+<button id="addBtn" class="btn" style="background-color: transparent; outline:none;">
+  <div class="card border-primary p-4" style="width: 20rem; border-radius:5px; background: transparent; box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;">
+  <h1 class="display-3  p-3 text-primary">+</h1>
+</div>
+</button>
 
   {{#each rooms as |room| }}
-    <a class="roomID" href="/room/{{id}}" >
+    <a class="roomID" href="/room/{{code}}" >
   <div class="card m-3  p-4" style="width: 20rem; background: #363940; box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;">
 
   <h1 style="text-decoration: none;" class="display-5 p-3">{{room.title}}</h1>
   </a>
-  <button onclick="copyRoom(this)" id="copyBtn" class="btn w-0 text-light" data-code='{{room.code}}'><i class="far fa-copy"></i></button>
+  <button onclick="copyRoom(this)" id="copyBtn" class="text-muted btn w-0 text-light" style="width: 150px;;" data-code='{{room.code}}'><i class="far fa-copy text-muted"></i> copy code</button>
+
 </div>
 {{/each}}
-  <button id="addBtn" class="position-fixed rounded btn btn-outline-primary">+</button>
+
+
 <div id="modalBg" style="display: none;">
   <div id="modal" class="card position-fixed" style="width: 50rem; background-color:#303136; box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;">
   <div class="card-body">
 
-    <h5 class="card-title">Add Room</h5>
+    <h5 class="card-title">Create Room</h5>
     <div class="input-group m-auto p-3">
   <input id="roomTitle"  type="text" class="text-light form-control bg-dark" style="border: none;" placeholder="Room Name EX: Cool Kid Club" aria-label="Room Name EX: Cool Kid Club" aria-describedby="basic-addon1">
   <button id="makeRoom" class="btn btn-primary" type="button" id="button-addon2">ADD</button>
 </div>
-  </div>
-  <div class="card-title">Add Room By Code
+<h5 class="card-title">Add Room By Code</h5>
     <div class="input-group m-auto p-3">
   <input id="addCode" type="text" class="form-control text-light bg-dark" style="border: none;" placeholder="Add By Code EX: 2d36e535-fae1-4056-97pa-4b51765df10f " aria-label="Add By Code" aria-describedby="button-addon2">
 <button id="makeRoomCode" class="btn btn-primary" type="button" id="button-addon2">ADD</button>
 </div>
+  </div>
+  
       <button id="closeModal" class="btn btn-danger end text-light">close</button>
 
-  </div>
+  
 </div>
 </div>
 
