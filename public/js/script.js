@@ -105,7 +105,9 @@ socket.on('dmMessages', (messages) => {
 });
 
 socket.on('populateDM', (messages) => {
+  console.log(messages);
   messages.forEach((message) => {
+    console.log(message);
     const dm = $(document.createElement('div'));
     dm.html(`<div  class="row card mb-2 p-3 message-card">
     <div class="card-header p-1" style="background-color: transparent; border: none;">
@@ -116,10 +118,14 @@ socket.on('populateDM', (messages) => {
     ).getFullYear()} - ${new Date(message.createdAt).getHours()}:${new Date(
       message.createdAt
     ).getMinutes()}:${new Date(message.createdAt).getSeconds()}
-        </small><div>${message.name} - ${message.text}</div>
+        </small><div id="dmSender">${message.name}</div><div> - ${
+      message.text
+    }</div>
         </div>
         </div>`);
+    console.log(dm);
     $('#chatCards').append(dm);
+    return;
   });
 });
 
@@ -289,8 +295,14 @@ $('#dm-input').keydown(function (e) {
 
 document.addEventListener('click', function (e) {
   if (e.target.id === 'msgName') {
-    console.log(e);
-    socket.emit('getDM', e.target.innerText);
+    if ($('#dmSender').text() !== e.target.innerText) {
+      $('#chatCards').empty();
+      socket.emit(
+        'getDM',
+        e.target.innerText,
+        localStorage.getItem('username')
+      );
+    }
   }
 });
 
