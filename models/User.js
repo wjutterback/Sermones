@@ -1,6 +1,7 @@
 const sequelize = require('../config/connection');
 const { Model, DataTypes } = require('sequelize');
 const bcrypt = require('bcrypt');
+const Audio = require('./Audio');
 
 class User extends Model {
   checkPassword(pw) {
@@ -11,7 +12,7 @@ class User extends Model {
 User.init(
   {
     id: {
-      type: DataTypes.INTEGER.UNSIGNED,
+      type: DataTypes.INTEGER,
       autoIncrement: true,
       primaryKey: true,
     },
@@ -23,6 +24,22 @@ User.init(
     password: {
       type: DataTypes.STRING,
       allowNull: false,
+    },
+    socketId: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    callerId: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    audioId: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+    },
+    roomId: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
     },
   },
   {
@@ -38,5 +55,6 @@ User.init(
     timestamps: false,
   }
 );
+User.belongsTo(Audio);
 
 module.exports = User;

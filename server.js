@@ -6,7 +6,7 @@ const exphbs = require('express-handlebars');
 const sequelize = require('./config/connection');
 const routes = require('./routes/routes');
 const SequelizeStore = require('connect-session-sequelize')(session.Store);
-
+const helpers = require('./utils/helpers.js');
 const app = express();
 const PORT = process.env.PORT || 3030;
 
@@ -15,6 +15,7 @@ const hbs = exphbs.create({
   layoutsDir: path.join(__dirname, '/views/layouts'),
   partialsDir: path.join(__dirname, '/views'),
   extname: '.hbs',
+  helpers,
 });
 
 //Session Set-Up
@@ -55,7 +56,6 @@ const socketRoutes = require('./routes/socketRoutes')(io);
 
 app.use(socketRoutes);
 
-//default port for HTTPS is 443, in dev we need to use a different one
 sequelize.sync().then(() => {
   httpServer.listen(PORT, () => console.log(`Listening on port: ${PORT}`));
 });

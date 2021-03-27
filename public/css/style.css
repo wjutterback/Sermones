@@ -1,18 +1,93 @@
-.chat-box {
-  background-color: #1e2e88;
-  border: 3px solid #08c52e;
+* {
+  font-family: 'Montserrat', sans-serif;
+  color: #d8d7df;
 }
 
-.chat-header {
-  color: white;
-  text-align: center;
+a {
+  text-decoration: none;
+  color: #d8d7df;
+}
+
+body {
+  height: 94.1vh;
+  overflow: hidden;
+}
+
+.audioSection {
+  max-height: 400px;
+  overflow-x: hidden;
 }
 
 .chat-window {
-  background-color: red;
-  border: 3px solid #08c52e;
+  height: 96%;
+  overflow-x: hidden;
 }
 
-.messages {
-  color: white;
+.main {
+  height: 100%;
 }
+
+/* width */
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background-color: #363940;
+  border-radius: 25px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background-color: #282a2e;
+  border-radius: 25px;
+}
+
+.message-card {
+  background-color: transparent;
+  border: none;
+}
+
+button{
+  border: none;
+  outline: none;
+}
+
+#addBtn{
+  position: fixed;
+  bottom: 25px;
+  right: 25px;
+  border-radius: 5px;
+}
+
+#modalBg{
+  background-color: rgba(0, 0, 0, 0.562);
+  width: 100vw;
+  height: 100vh;
+  top: 0px;
+  left: 0px;
+  z-index: 555;
+  position: fixed;
+  transition: .3s;
+}
+
+#modal{
+  position: fixed;
+left: 50%;
+top: 50%;
+transform: translate(-50%,-50%);
+z-index: 999;
+}
+
+input{
+  outline: none;
+}
+
+textarea {
+  resize: none;
+}
+audio {
+  display: 'none';
+}
+
