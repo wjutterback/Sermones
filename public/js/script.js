@@ -87,7 +87,6 @@ socket.on('audioUsers', (users, roomID) => {
   });
 });
 
-
 socket.on('newDM', (message, senderName) => {
   console.log(message);
   if (
@@ -114,12 +113,14 @@ socket.on('newDM', (message, senderName) => {
   }
 });
 
-const atName = (name) => {
-  const selected = $(name).attr('data-name');
-  $('#dm-name').val('');
-  $('#dm-name').val(selected);
-};
-
+// add: to id="msgName" onClick="atName(this)
+// const atName = (button) => {
+//   console.log(button);
+//   if ($('#dmSender').text() !== button.innerText) {
+//     $('#chatCards').empty();
+//     socket.emit('getDM', button.innerText, localStorage.getItem('username'));
+//   }
+// };
 
 socket.on('dmMessages', (messages) => {
   const messageArr = [];
@@ -131,7 +132,7 @@ socket.on('dmMessages', (messages) => {
   uniqueSender.forEach((user) => {
     const dm = $(document.createElement('div'));
     dm.html(`<div  class="row card mb-2 p-3 message-card">
-       <div class="card-header p-1" style="background-color: transparent; border: none;"><div><button id="msgName" class="btn text-light onClick="atName(this)">${user}</button></div>
+       <div class="card-header p-1" style="background-color: transparent; border: none;"><div><button id="msgName" class="btn text-light">${user}</button></div>
            </div>
            </div>`);
     $('#directMessages').append(dm);
@@ -315,12 +316,17 @@ $('#audioChannel1').on('click', () => {
 
 $('#dm-input').keydown(function (e) {
   if (e.which === 13 && $('#dm-input').val().length !== 0) {
-    socket.emit(
-      'dm-message',
-      $('#dm-name').val(),
-      $('#dm-input').val(),
-      localStorage.getItem('username')
-    );
+    const username = localStorage.getItem('username');
+    const message = $('#dm-input').val();
+    socket.emit('dm-message', $('#dm-name').val(), message, username);
+    const dm = $(document.createElement('div'));
+    dm.html(`<div  class="row card mb-2 p-3 message-card">
+    <div class="card-header p-1" style="background-color: transparent; border: none;">
+    <small class="text-muted">${new Date().toLocaleString()}
+          </small><div id="dmSender">${username}</div><div> - ${message}</div>
+          </div>
+          </div>`);
+    $('#chatCards').append(dm);
     $('#dm-input').val('');
   }
 });
@@ -389,14 +395,13 @@ $('#leaveRoom').on('click', async () => {
   const room_id = $('#audioChannel1').attr('data-room');
   const response = await fetch(`/room/${room_id}`, {
     method: 'DELETE',
-    body: JSON.stringify({user_id, room_id}),
+    body: JSON.stringify({ user_id, room_id }),
     headers: { 'Content-Type': 'application/json' },
   });
 
-  if (response.ok){
+  if (response.ok) {
     document.location.replace('/rooms');
-  }else {
+  } else {
     alert('something went wrong!');
   }
 });
-
