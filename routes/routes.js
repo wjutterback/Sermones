@@ -110,7 +110,7 @@ router.post('/sign-in', async (req, res) => {
         loggedIn: req.session.loggedIn,
         userId: req.session.userId,
       });
-      let localDate=new Date().toLocaleString();
+      let localDate=new Date();
       localStorage.setItem('userLastCheckedMessages',localDate);
     });
   } catch (err) {

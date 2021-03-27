@@ -148,8 +148,12 @@ socket.on('dmMessages', (messages) => {
 });
 
 socket.on('populateDM', (messages) => {
+  let localDatePull=new Date();
+  let lastPullDate=localStorage.getItem('userLastCheckedMessages');
+  let messagesUnchecked=0;
   messages.forEach((message) => {
     const dm = $(document.createElement('div'));
+    let dateMessageCreatedAt=new Date(message.createdAt);
     dm.html(`<div  class="row card mb-2 p-3 message-card">
     <div id="dmSender" class="card-header p-1" style="background-color: transparent; border: none;">
     ${message.name} <small class="text-muted"> ${new Date(
@@ -158,8 +162,15 @@ socket.on('populateDM', (messages) => {
         </small> </div><div class="card-body p-1"> ${message.text}</div>
         </div>`);
     $('#chatCards').append(dm);
+    
+
+    if (dateMessageCreatedAt.getTime()>=lastPullDate.getTime())
+    {
+        messagesUnchecked=messagesUnchecked+1;
+    }
   });
   scrollToBottom();
+  localStorage.setItem('userLastCheckedMessages',localDatePull);
 });
 
 socket.on('createMessage', (message, username) => {
