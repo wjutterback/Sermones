@@ -10,14 +10,14 @@
 </head>
 <body>
     <video autoplay="true" id="videoElement"></video>
-    <canvas id="canvasLessTwo" width="1080" height="720"></canvas>
-    <canvas id="canvasLessOne" width="1080" height="720"></canvas>
+    <canvas id="canvasLessTwo" width="1080" height="720" style="display:none"></canvas>
+    <canvas id="canvasLessOne" width="1080" height="720" style="display:none"></canvas>
 
     <!-- 
     <span id="canvasLessTwoFull">0</span>
     
     <span id="canvasLessOneFull">0</span> -->
-    <canvas id="canvas" width="1080" height="720"></canvas>
+    <canvas id="canvas" width="1080" height="720" style="display:none"></canvas>
     <canvas id="canvasDiff" width="1080" height="720"></canvas>
     <!--  -->
 
@@ -41,6 +41,7 @@
         var numFrames=0;
         const numFramesMax=20000;
         const RGBThresh=15;
+        const milliDelay=100;
 
 
         if (navigator.mediaDevices.getUserMedia) {
@@ -84,7 +85,7 @@
                 arguments.push(canvas);
                 arguments.push(imgDataLessTwo);
                 arguments.push(imgDataLessOne);
-                setTimeout(() => {  console.log("World!"); printSleepII(arguments);}, 100);
+                setTimeout(() => {  console.log("World!"); printSleepII(arguments);}, milliDelay);
             });
     
         // try{
@@ -195,7 +196,7 @@
 
             
             // setTimeout(() => {  console.log("World!"); printSleepII(argumentsII)}, 100);
-            setTimeout(() => { printSleepII(argumentsII)}, 100);
+            setTimeout(() => { printSleepII(argumentsII)}, milliDelay);
 
 
         }
