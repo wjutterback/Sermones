@@ -87,6 +87,12 @@ socket.on('audioUsers', (users, roomID) => {
   });
 });
 
+const atName = (name) => {
+  const selected = $(name).attr('data-name');
+  $('#dm-name').val('');
+  $('#dm-name').val(selected);
+};
+
 socket.on('dmMessages', (messages) => {
   messages.forEach((message) => {
     console.log(message);
@@ -100,7 +106,7 @@ socket.on('dmMessages', (messages) => {
       ).getMonth()}/${new Date(message.createdAt).getDate()}/${new Date(
         message.createdAt
       ).getFullYear()}
-          </small><div><button id="msgName" class="btn text-light">${
+          </small><div><button id="msgName" class="btn text-light" data-name="${message.name}" onClick="atName(this)">${
             message.name
           }</button></div>
           </div>
@@ -121,7 +127,7 @@ socket.on('dmMessages', (messages) => {
         ).getMonth()}/${new Date(message.createdAt).getDate()}/${new Date(
             message.createdAt
           ).getFullYear()}
-            </small><div><button id="msgName" class="btn text-light">${
+            </small><div><button id="msgName" class="btn text-light" data-name="${message.name}" onClick="atName(this)">${
               message.name
             }</button></div>
             </div>
@@ -382,3 +388,4 @@ $('#leaveRoom').on('click', async () => {
     alert('something went wrong!');
   }
 });
+
