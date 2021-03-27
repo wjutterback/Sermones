@@ -329,6 +329,7 @@ document.addEventListener('click', function (e) {
     if ($('#dmSender').text() !== e.target.innerText) {
       $('#chatCards').empty();
       $('#chatter').text(`${e.target.innerText}`);
+      $('#dm-name').val(`${e.target.innerText}`);
       socket.emit(
         'getDM',
         e.target.innerText,
