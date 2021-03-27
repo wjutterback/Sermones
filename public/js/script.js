@@ -151,13 +151,9 @@ socket.on('populateDM', (messages) => {
     const dm = $(document.createElement('div'));
     dm.html(`<div  class="row card mb-2 p-3 message-card">
     <div id="dmSender" class="card-header p-1" style="background-color: transparent; border: none;">
-    ${message.name} <small class="text-muted">${new Date(
+    ${message.name} <small class="text-muted"> ${new Date(
       message.createdAt
-    ).getMonth()}/${new Date(message.createdAt).getDate()}/${new Date(
-      message.createdAt
-    ).getFullYear()} - ${new Date(message.createdAt).getHours()}:${new Date(
-      message.createdAt
-    ).getMinutes()}:${new Date(message.createdAt).getSeconds()}
+    ).toLocaleString()}
         </small> </div><div class="card-body p-1"> ${message.text}</div>
         </div>`);
     console.log(dm);
@@ -318,9 +314,9 @@ $('#dm-input').keydown(function (e) {
     socket.emit('dm-message', $('#dm-name').val(), message, username);
     const dm = $(document.createElement('div'));
     dm.html(`<div  class="row card mb-2 p-3 message-card">
-    <div class="card-header p-1" style="background-color: transparent; border: none;">
-    <small class="text-muted">${new Date().toLocaleString()}
-          </small><div id="dmSender">${username}</div><div> - ${message}</div>
+    <div id="dmSender" class="card-header p-1" style="background-color: transparent; border: none;">
+    ${username}<small class="text-muted"> ${new Date().toLocaleString()}
+          </small><div class="card-body p-1"> ${message}</div>
           </div>
           </div>`);
     $('#chatCards').append(dm);
