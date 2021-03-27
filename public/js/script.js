@@ -88,48 +88,19 @@ socket.on('audioUsers', (users, roomID) => {
 });
 
 socket.on('dmMessages', (messages) => {
+  const messageArr = [];
   messages.forEach((message) => {
-    console.log(message);
-    const htmlState = document.querySelectorAll('#msgName');
-    if (htmlState.length === 0) {
-      const dm = $(document.createElement('div'));
-      dm.html(`<div  class="row card mb-2 p-3 message-card">
-      <div class="card-header p-1" style="background-color: transparent; border: none;">
-      <small class="text-muted">${new Date(
-        message.createdAt
-      ).getMonth()}/${new Date(message.createdAt).getDate()}/${new Date(
-        message.createdAt
-      ).getFullYear()}
-          </small><div><button id="msgName" class="btn text-light">${
-            message.name
-          }</button></div>
-          </div>
-          </div>`);
-      $('#directMessages').append(dm);
-    } else {
-      htmlState.forEach((user) => {
-        console.log(user);
-        console.log('innerHTML', user.innerHTML, 'message.name', message.name);
-        if (user.innerHTML === message.name || htmlState.length === 0) {
-        } else {
-          console.log('in the else');
-          const dm = $(document.createElement('div'));
-          dm.html(`<div  class="row card mb-2 p-3 message-card">
-        <div class="card-header p-1" style="background-color: transparent; border: none;">
-        <small class="text-muted">${new Date(
-          message.createdAt
-        ).getMonth()}/${new Date(message.createdAt).getDate()}/${new Date(
-            message.createdAt
-          ).getFullYear()}
-            </small><div><button id="msgName" class="btn text-light">${
-              message.name
-            }</button></div>
-            </div>
-            </div>`);
-          $('#directMessages').append(dm);
-        }
-      });
-    }
+    messageArr.push(message.name);
+  });
+  let uniqueSender = [...new Set(messageArr)];
+  console.log(uniqueSender);
+  uniqueSender.forEach((user) => {
+    const dm = $(document.createElement('div'));
+    dm.html(`<div  class="row card mb-2 p-3 message-card">
+       <div class="card-header p-1" style="background-color: transparent; border: none;"><div><button id="msgName" class="btn text-light">${user}</button></div>
+           </div>
+           </div>`);
+    $('#directMessages').append(dm);
   });
 });
 

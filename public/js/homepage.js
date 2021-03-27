@@ -3,10 +3,10 @@ function transitionEffect() {
   homepage.classList.add('transition');
   setTimeout(() => {
     homepage.classList.remove('transition');
-  }, 2000);
+  }, 0);
   setTimeout(() => {
     homepage.innerHTML = 'Click Sign-In to Begin';
     homepage.classList.add('transition');
-  }, 6700);
+  }, 4700);
 }
 transitionEffect();
