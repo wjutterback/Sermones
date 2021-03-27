@@ -1,5 +1,6 @@
 const { Model, DataTypes } = require('sequelize');
 const sequelize = require('../config/connection');
+const User = require('./User');
 
 class Room extends Model {}
 
@@ -17,20 +18,20 @@ Room.init(
     },
     code: {
       type: DataTypes.STRING,
-      unique: true,
       allowNull: false,
     },
-    members_id: {
-      type: DataTypes.JSON,
-    }
+    userId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
   },
   {
     sequelize,
     timestamps: false,
     tableName: 'rooms',
-    underscored: true,
     modelName: 'room',
   }
 );
+Room.belongsTo(User);
 
 module.exports = Room;
