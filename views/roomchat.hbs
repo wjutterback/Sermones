@@ -1,3 +1,4 @@
+{{#if loggedIn}}
 <div
   id="room"
   data-room="{{roomID}}"
@@ -70,5 +71,8 @@
     </div>
   </div>
 </div>
-
 <script src="/js/roomchat.js"></script>
+{{else}}
+  <div class="card-title text-center">Unauthorized Access</div>
+  <p class="card-text text-center">You do not have access for this room.</p>
+{{/if}}

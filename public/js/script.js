@@ -199,7 +199,7 @@ async function login(name, password) {
       const responseMessage = await response.json();
       $('#error').text('');
       $('#message').text(responseMessage.message);
-      document.location.replace('/');
+      document.location.replace('/homepage');
     }
     const responseMessage = await response.json();
     $('#error').text(responseMessage.message);
@@ -265,7 +265,7 @@ $('#chat-message').keydown(function (e) {
     }
   }
 });
-//TODO: Get the user id added to json attribute in the Room object
+
 $('#makeRoomCode').on('click', async function () {
   const code = $('#addCode').val().trim();
   if (code) {

@@ -1,7 +1,8 @@
 
 
 
-  <div  class="row container row-cols-5 p-3 m-auto w-100" style="background-color:#303136; max-height: 100%; overflow-x:hidden;">
+{{#if loggedIn}}
+  <div class="row container row-cols-5 p-3 m-auto w-100" style="background-color:#303136; max-height: 100%; overflow-x:hidden;">
 <button id="addBtn" class="btn" style="background-color: transparent; outline:none;">
   <div class="card border-primary p-4" style="width: 20rem; border-radius:5px; background: transparent; box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;">
   <h1 class="display-3  p-3 text-primary">+</h1>
@@ -41,6 +42,9 @@
   
 </div>
 </div>
-
+{{else}}
+  <div class="card-title text-center">Unauthorized Access</div>
+  <p class="card-text text-center">Please log in to access and create rooms.</p>
+{{/if}}
 
 
