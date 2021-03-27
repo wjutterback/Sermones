@@ -14,6 +14,13 @@ router.get('/', (req, res) => {
   });
 });
 
+router.get('/homepage', (req, res) => {
+  res.render('loggedIn', {
+    loggedIn: req.session.loggedIn,
+    name: req.session.name,
+  });
+});
+
 router.get('/rooms', async (req, res) => {
   try {
     const roomData = await Room.findAll({
@@ -38,7 +45,6 @@ router.get('/rooms', async (req, res) => {
 router.post('/roomscode', async (req, res) => {
   try {
     const findRoom = await Room.findOne({ where: { code: req.body.code } });
-    console.log(findRoom);
     await Room.create({
       title: findRoom.title,
       code: findRoom.code,

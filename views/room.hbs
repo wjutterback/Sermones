@@ -1,6 +1,6 @@
 
 
-
+{{#if loggedIn}}
   <div class="row container row-cols-5 p-3 m-auto w-100" style="background-color:#303136; max-height: 100%; overflow-x:hidden;">
 
 
@@ -34,6 +34,9 @@
   </div>
 </div>
 </div>
-
+{{else}}
+  <div class="card-title text-center">Unauthorized Access</div>
+  <p class="card-text text-center">Please log in to access and create rooms.</p>
+{{/if}}
 
 
