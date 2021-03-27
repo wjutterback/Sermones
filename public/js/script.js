@@ -140,7 +140,7 @@ socket.on('dmMessages', (messages) => {
   uniqueSender.forEach((user) => {
     const dm = $(document.createElement('div'));
     dm.html(`<div  class="row card mb-2 p-3 message-card">
-       <div class="card-header p-1" style="background-color: transparent; border: none;"><div><button id="msgName" class="btn text-light">${user}</button></div>
+       <div class="card-header p-1" style="background-color: transparent; border: none;"><div><button id="msgName" class="btn text-light">${user} <span style="border-radius:50%; border:solid red 1px;padding:2px" id="notifyUnread${user}"></span></button></div>
            </div>
            </div>`);
     $('#directMessages').append(dm);
@@ -148,7 +148,7 @@ socket.on('dmMessages', (messages) => {
 });
 
 socket.on('populateDM', (messages) => {
-  let localDatePull=new Date();
+  // let localDatePull=new Date();
   let lastPullDate=localStorage.getItem('userLastCheckedMessages');
   let messagesUnchecked=0;
   messages.forEach((message) => {
@@ -170,7 +170,15 @@ socket.on('populateDM', (messages) => {
     }
   });
   scrollToBottom();
-  localStorage.setItem('userLastCheckedMessages',localDatePull);
+  var unnotifiedSpan=$(`#notifyUnread${message.name}`);
+  if (unnotifiedSpan.innerText) {
+    unnotifiedSpan.innerText = messagesUnchecked;
+  }
+  else
+  if (unnotifiedSpan.textContent) {
+    unnotifiedSpan.textContent = messagesUnchecked;   
+  }
+  // localStorage.setItem('userLastCheckedMessages',localDatePull);
 });
 
 socket.on('createMessage', (message, username) => {
