@@ -97,3 +97,11 @@ audio {
 .transition {
   opacity: 1;
 }
+
+#alert {
+  position: fixed;
+  bottom: 25px;
+  width: 500px;
+  right: 25px;
+  z-index: 9999;
+}

@@ -11,6 +11,11 @@ socket.on('create', (user) => {
   //   port: 3030,
   // });
 
+  socket.on('diediedie', () => {
+    console.log('incoming received');
+    peer.destroy();
+  });
+
   peer.on('open', function (id) {
     socket.emit('created', id, user);
   });
@@ -25,10 +30,12 @@ socket.on('create', (user) => {
         incomingCall.answer(myStream);
         incomingCall.on('stream', (incomingStream) => {
           const audio = document.createElement('audio');
-
           audio.srcObject = incomingStream;
           audio.play();
           document.body.appendChild(audio);
+        });
+        peer.on('disconnected', function () {
+          peer.reconnect();
         });
       });
   });
@@ -47,6 +54,9 @@ socket.on('create', (user) => {
               audio.srcObject = incomingStream;
               audio.play();
               document.body.appendChild(audio);
+            });
+            peer.on('disconnected', function () {
+              peer.reconnect();
             });
           });
       }
@@ -230,7 +240,6 @@ const logout = async () => {
 };
 
 const joinAudio = async (name) => {
-  console.log('audio join fired');
   socket.emit('audio-joined', $('#audioChannel1').attr('data-audio'), name);
 };
 
@@ -399,3 +408,34 @@ $('#leaveRoom').on('click', async () => {
     alert('something went wrong!');
   }
 });
+
+socket.on('removeUser', (user) => {
+  const children = document.querySelectorAll('.userName');
+  children.forEach((child) => {
+    if (child.innerHTML === user) {
+      child.remove();
+    }
+  });
+});
+
+$('#leaveVoice').on('click', async () => {
+  const userName = localStorage.getItem('username');
+  socket.emit('userLeft', userName, $('#audioChannel1').attr('data-room'));
+  socket.emit('peerDestroy', userName);
+});
+
+const notif = (message) => {
+  const div = $('<div>');
+  $(div).css('display', 'none');
+  $(div).html(`<div id="alert" class="alert alert-dark" role="alert">
+  <h4 class="alert-heading">${message.name}
+  <small class="text-dark text-muted">${new Date().toLocaleString()}</small></h4>
+  <hr>
+  <p class="text-primary">${message}</p>
+</div>`);
+  $('body').append(div);
+  $(div).fadeIn();
+  setTimeout(function () {
+    $(div).fadeOut();
+  }, 5000);
+};
