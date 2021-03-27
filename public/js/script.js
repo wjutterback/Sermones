@@ -140,7 +140,7 @@ socket.on('dmMessages', (messages) => {
   uniqueSender.forEach((user) => {
     const dm = $(document.createElement('div'));
     dm.html(`<div  class="row card mb-2 p-3 message-card">
-       <div class="card-header p-1" style="background-color: transparent; border: none;"><div><button id="msgName" class="btn text-light">${user}</button></div>
+       <div class="card-header p-1" style="background-color: transparent; border: none;"><div><button id="msgName" class="btn text-light">${user} <span style="border-radius:50%; border:solid red 1px;padding:2px" id="notifyUnread${user}"></span></button></div>
            </div>
            </div>`);
     $('#directMessages').append(dm);
@@ -148,8 +148,12 @@ socket.on('dmMessages', (messages) => {
 });
 
 socket.on('populateDM', (messages) => {
+  // let localDatePull=new Date();
+  let lastPullDate=localStorage.getItem('userLastCheckedMessages');
+  let messagesUnchecked=0;
   messages.forEach((message) => {
     const dm = $(document.createElement('div'));
+    let dateMessageCreatedAt=new Date(message.createdAt);
     dm.html(`<div  class="row card mb-2 p-3 message-card">
     <div id="dmSender" class="card-header p-1" style="background-color: transparent; border: none;">
     ${message.name} <small class="text-muted"> ${new Date(
@@ -158,8 +162,23 @@ socket.on('populateDM', (messages) => {
         </small> </div><div class="card-body p-1"> ${message.text}</div>
         </div>`);
     $('#chatCards').append(dm);
+    
+
+    if (dateMessageCreatedAt.getTime()>=lastPullDate.getTime())
+    {
+        messagesUnchecked=messagesUnchecked+1;
+    }
   });
   scrollToBottom();
+  var unnotifiedSpan=$(`#notifyUnread${message.name}`);
+  if (unnotifiedSpan.innerText) {
+    unnotifiedSpan.innerText = messagesUnchecked;
+  }
+  else
+  if (unnotifiedSpan.textContent) {
+    unnotifiedSpan.textContent = messagesUnchecked;   
+  }
+  // localStorage.setItem('userLastCheckedMessages',localDatePull);
 });
 
 socket.on('createMessage', (message, username) => {
@@ -335,6 +354,8 @@ document.addEventListener('click', function (e) {
         e.target.innerText,
         localStorage.getItem('username')
       );
+      let localDatePull=new Date();
+      localStorage.setItem('userLastCheckedMessages',localDatePull);
     }
   }
 });
