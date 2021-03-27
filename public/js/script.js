@@ -353,6 +353,8 @@ document.addEventListener('click', function (e) {
         e.target.innerText,
         localStorage.getItem('username')
       );
+      let localDatePull=new Date();
+      localStorage.setItem('userLastCheckedMessages',localDatePull);
     }
   }
 });
