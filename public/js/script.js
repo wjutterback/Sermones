@@ -395,13 +395,13 @@ $('#leaveRoom').on('click', async () => {
   const room_id = $('#audioChannel1').attr('data-room');
   const response = await fetch(`/room/${room_id}`, {
     method: 'DELETE',
-    body: JSON.stringify({ user_id, room_id }),
+    body: JSON.stringify({user_id, room_id}),
     headers: { 'Content-Type': 'application/json' },
   });
 
-  if (response.ok) {
+  if (response.ok){
     document.location.replace('/rooms');
-  } else {
+  }else {
     alert('something went wrong!');
   }
 });
