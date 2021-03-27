@@ -199,7 +199,7 @@ async function login(name, password) {
       const responseMessage = await response.json();
       $('#error').text('');
       $('#message').text(responseMessage.message);
-      document.location.replace('/');
+      document.location.replace('/homepage');
     }
     const responseMessage = await response.json();
     $('#error').text(responseMessage.message);

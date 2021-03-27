@@ -5,8 +5,13 @@ function transitionEffect() {
     homepage.classList.remove('transition');
   }, 2000);
   setTimeout(() => {
-    homepage.innerHTML = 'Click Sign-In to Begin';
+    homepage.innerHTML =
+      'Bring your friends. We definitely will not be listening to your conversations';
     homepage.classList.add('transition');
-  }, 6700);
+  }, 6500);
+  setTimeout(() => {
+    homepage.classList.remove('transition');
+  }, 8700);
 }
+
 transitionEffect();

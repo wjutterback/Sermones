@@ -14,6 +14,13 @@ router.get('/', (req, res) => {
   });
 });
 
+router.get('/homepage', (req, res) => {
+  res.render('loggedIn', {
+    loggedIn: req.session.loggedIn,
+    name: req.session.name,
+  });
+});
+
 router.get('/rooms', async (req, res) => {
   try {
     const roomData = await Room.findAll({
