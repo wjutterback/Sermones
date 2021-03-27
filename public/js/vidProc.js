@@ -1,5 +1,5 @@
-function videoProcEl(videoElementId, stream)
-{
+// function videoProcEl(videoElementId, stream)
+// {
     var video = document.querySelector("#videoElement");
 
     let canvasLessTwo= document.querySelector('#canvasLessTwo');
@@ -140,4 +140,4 @@ function videoProcEl(videoElementId, stream)
 
 
 
-}
+// }
