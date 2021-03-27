@@ -3,8 +3,7 @@ const Room = require('../models/Room');
 const User = require('../models/User');
 const Message = require('../models/Message');
 const { v4: uuidv4 } = require('uuid');
-const { sequelize } = require('../models/User');
-const Sequelize = require('sequelize');
+const { Sequelize } = require('sequelize');
 const Op = Sequelize.Op;
 
 router.get('/', (req, res) => {

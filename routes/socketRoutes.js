@@ -28,13 +28,20 @@ module.exports = (io) => {
         }
       }
     );
-
-    socket.on('getDM', async (user) => {
-      console.log(user);
+    //working: SELECT dms.text, users.name, dms.createdAt FROM dms LEFT JOIN users on users.id = dms.senderId WHERE users.name = ?
+    //SELECT dms.text, users.name, dms.createdAt FROM dms LEFT JOIN users on users.id = dms.senderId WHERE dms.receiverId = ?
+    socket.on('getDM', async (sender, receiver) => {
+      const senderMsg = await User.findOne({ where: { name: sender } });
+      const receiverMsg = await User.findOne({ where: { name: receiver } });
       const userMessages = await sequelize.query(
-        'SELECT dms.text, users.name, dms.createdAt FROM dms LEFT JOIN users on users.id = dms.senderId WHERE users.name = ?',
+        'SELECT dms.text, users.name, dms.createdAt FROM dms RIGHT JOIN users on users.id = dms.senderId WHERE dms.receiverId = 1 AND dms.senderId = 3 OR dms.receiverId = 3 AND dms.senderId = 1 ORDER BY createdAt;',
         {
-          replacements: [`${user}`],
+          replacements: [
+            `${receiverMsg.id}`,
+            `${senderMsg.id}`,
+            `${senderMsg.id}`,
+            `${receiverMsg.id}`,
+          ],
           type: Sequelize.QueryTypes.SELECT,
         }
       );
