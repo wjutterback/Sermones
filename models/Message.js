@@ -22,11 +22,7 @@ Message.init(
       defaultValue: DataTypes.NOW,
     },
     room_id: {
-      type: DataTypes.INTEGER,
-      references: {
-        model: 'room',
-        key: 'id',
-      },
+      type: DataTypes.STRING,
     },
     user_id: {
       type: DataTypes.INTEGER,
@@ -46,6 +42,6 @@ Message.init(
 );
 
 Message.belongsTo(User);
-Message.belongsTo(Room);
+
 
 module.exports = Message;
