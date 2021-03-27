@@ -11,6 +11,11 @@ socket.on('create', (user) => {
   //   port: 3030,
   // });
 
+  socket.on('diediedie', () => {
+    console.log('incoming received');
+    peer.destroy();
+  });
+
   peer.on('open', function (id) {
     socket.emit('created', id, user);
   });
@@ -25,10 +30,12 @@ socket.on('create', (user) => {
         incomingCall.answer(myStream);
         incomingCall.on('stream', (incomingStream) => {
           const audio = document.createElement('audio');
-
           audio.srcObject = incomingStream;
           audio.play();
           document.body.appendChild(audio);
+        });
+        peer.on('disconnected', function () {
+          peer.reconnect();
         });
       });
   });
@@ -47,6 +54,9 @@ socket.on('create', (user) => {
               audio.srcObject = incomingStream;
               audio.play();
               document.body.appendChild(audio);
+            });
+            peer.on('disconnected', function () {
+              peer.reconnect();
             });
           });
       }
@@ -87,54 +97,12 @@ socket.on('audioUsers', (users, roomID) => {
   });
 });
 
-socket.on('dmMessages', (messages) => {
-  messages.forEach((message) => {
-    console.log(message);
-    const htmlState = document.querySelectorAll('#msgName');
-    if (htmlState.length === 0) {
-      const dm = $(document.createElement('div'));
-      dm.html(`<div  class="row card mb-2 p-3 message-card">
-      <div class="card-header p-1" style="background-color: transparent; border: none;">
-      <small class="text-muted">${new Date(
-        message.createdAt
-      ).getMonth()}/${new Date(message.createdAt).getDate()}/${new Date(
-        message.createdAt
-      ).getFullYear()}
-          </small><div><button id="msgName" class="btn text-light">${
-            message.name
-          }</button></div>
-          </div>
-          </div>`);
-      $('#directMessages').append(dm);
-    } else {
-      htmlState.forEach((user) => {
-        console.log(user);
-        console.log('innerHTML', user.innerHTML, 'message.name', message.name);
-        if (user.innerHTML === message.name || htmlState.length === 0) {
-        } else {
-          console.log('in the else');
-          const dm = $(document.createElement('div'));
-          dm.html(`<div  class="row card mb-2 p-3 message-card">
-        <div class="card-header p-1" style="background-color: transparent; border: none;">
-        <small class="text-muted">${new Date(
-          message.createdAt
-        ).getMonth()}/${new Date(message.createdAt).getDate()}/${new Date(
-            message.createdAt
-          ).getFullYear()}
-            </small><div><button id="msgName" class="btn text-light">${
-              message.name
-            }</button></div>
-            </div>
-            </div>`);
-          $('#directMessages').append(dm);
-        }
-      });
-    }
-  });
-});
-
-socket.on('populateDM', (messages) => {
-  messages.forEach((message) => {
+socket.on('newDM', (message, senderName) => {
+  console.log(message);
+  if (
+    window.location.pathname === '/messages' &&
+    $('#dmSender').text() === senderName
+  ) {
     const dm = $(document.createElement('div'));
     dm.html(`<div  class="row card mb-2 p-3 message-card">
     <div class="card-header p-1" style="background-color: transparent; border: none;">
@@ -145,10 +113,39 @@ socket.on('populateDM', (messages) => {
     ).getFullYear()} - ${new Date(message.createdAt).getHours()}:${new Date(
       message.createdAt
     ).getMinutes()}:${new Date(message.createdAt).getSeconds()}
-        </small><div>${message.name} - ${message.text}</div>
+        </small><div id="dmSender">${senderName}</div><div> - ${
+      message.text
+    }</div>
         </div>
         </div>`);
+    console.log(dm);
     $('#chatCards').append(dm);
+  }
+});
+
+// add: to id="msgName" onClick="atName(this)
+// const atName = (button) => {
+//   console.log(button);
+//   if ($('#dmSender').text() !== button.innerText) {
+//     $('#chatCards').empty();
+//     socket.emit('getDM', button.innerText, localStorage.getItem('username'));
+//   }
+// };
+
+socket.on('dmMessages', (messages) => {
+  const messageArr = [];
+  messages.forEach((message) => {
+    messageArr.push(message.name);
+  });
+  let uniqueSender = [...new Set(messageArr)];
+  console.log(uniqueSender);
+  uniqueSender.forEach((user) => {
+    const dm = $(document.createElement('div'));
+    dm.html(`<div  class="row card mb-2 p-3 message-card">
+       <div class="card-header p-1" style="background-color: transparent; border: none;"><div><button id="msgName" class="btn text-light">${user}</button></div>
+           </div>
+           </div>`);
+    $('#directMessages').append(dm);
   });
 });
 
@@ -156,6 +153,24 @@ const scrollToBottom = () => {
   const chatWindow = $('.chat-window');
   chatWindow.scrollTop(chatWindow.prop('scrollHeight'));
 };
+
+socket.on('populateDM', (messages) => {
+  console.log(messages);
+  messages.forEach((message) => {
+    console.log(message);
+    const dm = $(document.createElement('div'));
+    dm.html(`<div  class="row card mb-2 p-3 message-card">
+    <div id="dmSender" class="card-header p-1" style="background-color: transparent; border: none;">
+    ${message.name} <small class="text-muted"> ${new Date(
+      message.createdAt
+    ).toLocaleString()}
+        </small> </div><div class="card-body p-1"> ${message.text}</div>
+        </div>`);
+    console.log(dm);
+    $('#chatCards').append(dm);
+  });
+  scrollToBottom();
+});
 
 socket.on('createMessage', (message, username) => {
   const messageBody = $('<div>');
@@ -199,7 +214,7 @@ async function login(name, password) {
       const responseMessage = await response.json();
       $('#error').text('');
       $('#message').text(responseMessage.message);
-      document.location.replace('/');
+      document.location.replace('/homepage');
     }
     const responseMessage = await response.json();
     $('#error').text(responseMessage.message);
@@ -225,7 +240,6 @@ const logout = async () => {
 };
 
 const joinAudio = async (name) => {
-  console.log('audio join fired');
   socket.emit('audio-joined', $('#audioChannel1').attr('data-audio'), name);
 };
 
@@ -265,19 +279,17 @@ $('#chat-message').keydown(function (e) {
     }
   }
 });
-//TODO: Get the user id added to json attribute in the Room object
+
 $('#makeRoomCode').on('click', async function () {
   const code = $('#addCode').val().trim();
-  console.log(code);
-  if ($('#addCode').val().length !== 0) {
+  if (code) {
     const response = await fetch('/roomscode', {
       method: 'POST',
       body: JSON.stringify({ code }),
       headers: { 'Content-Type': 'application/json' },
     });
-    console.log(response);
     if (response.ok) {
-      location.reload();
+      document.location.replace('/rooms');
     } else {
       alert('FAIL');
     }
@@ -306,20 +318,32 @@ $('#audioChannel1').on('click', () => {
 
 $('#dm-input').keydown(function (e) {
   if (e.which === 13 && $('#dm-input').val().length !== 0) {
-    socket.emit(
-      'dm-message',
-      $('#dm-name').val(),
-      $('#dm-input').val(),
-      localStorage.getItem('username')
-    );
+    const username = localStorage.getItem('username');
+    const message = $('#dm-input').val();
+    socket.emit('dm-message', $('#dm-name').val(), message, username);
+    const dm = $(document.createElement('div'));
+    dm.html(`<div  class="row card mb-2 p-3 message-card">
+    <div id="dmSender" class="card-header p-1" style="background-color: transparent; border: none;">
+    ${username}<small class="text-muted"> ${new Date().toLocaleString()}
+          </small><div class="card-body p-1"> ${message}</div>
+          </div>
+          </div>`);
+    $('#chatCards').append(dm);
     $('#dm-input').val('');
+    scrollToBottom();
   }
 });
 
 document.addEventListener('click', function (e) {
   if (e.target.id === 'msgName') {
-    console.log(e);
-    socket.emit('getDM', e.target.innerText);
+    if ($('#dmSender').text() !== e.target.innerText) {
+      $('#chatCards').empty();
+      socket.emit(
+        'getDM',
+        e.target.innerText,
+        localStorage.getItem('username')
+      );
+    }
   }
 });
 
@@ -368,3 +392,50 @@ const updateLocalStorage = () => {
 };
 
 updateLocalStorage();
+
+$('#leaveRoom').on('click', async () => {
+  const user_id = $('#user').attr('data-user');
+  const room_id = $('#audioChannel1').attr('data-room');
+  const response = await fetch(`/room/${room_id}`, {
+    method: 'DELETE',
+    body: JSON.stringify({ user_id, room_id }),
+    headers: { 'Content-Type': 'application/json' },
+  });
+
+  if (response.ok) {
+    document.location.replace('/rooms');
+  } else {
+    alert('something went wrong!');
+  }
+});
+
+socket.on('removeUser', (user) => {
+  const children = document.querySelectorAll('.userName');
+  children.forEach((child) => {
+    if (child.innerHTML === user) {
+      child.remove();
+    }
+  });
+});
+
+$('#leaveVoice').on('click', async () => {
+  const userName = localStorage.getItem('username');
+  socket.emit('userLeft', userName, $('#audioChannel1').attr('data-room'));
+  socket.emit('peerDestroy', userName);
+});
+
+const notif = (message) => {
+  const div = $('<div>');
+  $(div).css('display', 'none');
+  $(div).html(`<div id="alert" class="alert alert-dark" role="alert">
+  <h4 class="alert-heading">${message.name}
+  <small class="text-dark text-muted">${new Date().toLocaleString()}</small></h4>
+  <hr>
+  <p class="text-primary">${message}</p>
+</div>`);
+  $('body').append(div);
+  $(div).fadeIn();
+  setTimeout(function () {
+    $(div).fadeOut();
+  }, 5000);
+};

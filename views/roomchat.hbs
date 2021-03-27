@@ -1,10 +1,12 @@
+{{#if loggedIn}}
 <div
   id="room"
   data-room="{{roomID}}"
+  data-code="{{code}}"
   class="row main m-auto w-100"
   style="color: #d8d7df"
 >
-  <div style="background-color: #2d2f35 ;" class="col-2 p-4 h-100">
+  <div style="background-color: #2d2f35" class="col-2 p-4 h-100">
     <div class="row g-0 text-start">
       <button
         type="button"
@@ -21,14 +23,6 @@
         <audio autoplay="true"></audio>
       </div>
     </div>
-    <div class="row g-0">
-      <a
-        class="btn w-100 btn-link"
-        href="/channel/1"
-        style="text-decoration: none; color: #d8d7df"
-        >Chat Channel #1</a
-      >
-    </div>
   </div>
   <div
     style="background-color: #363940; max-height: 97%"
@@ -37,7 +31,7 @@
     <div
       class="row mb-3 g-0 chat-header text-center mx-auto border-bottom border-primary"
     >
-      <h6>Chat</h6>
+      <h6 id="user" data-user="{{user_id}}">Chat</h6>
     </div>
     <div class="row" style="height: 97%; max-height: 97%">
       <div class="row g-0 w-100 chat-window" id="chat-window">
@@ -62,6 +56,10 @@
         class="input-group mt-3 border-top border-secondary p-3 fixed-bottom"
         style="background-color: #363940"
       >
+        <button class="btn text-light btn-warning" id="leaveVoice">
+          <i class="fas fa-phone-slash text-light"></i> Leave Voice Chat
+        </button>
+
         <input
           style="background-color: #2d2f35; color: #d8d7df; position: relative"
           type="text"
@@ -71,9 +69,15 @@
           aria-label="Type message here..."
           aria-describedby="basic-addon1"
         />
+        <button id="leaveRoom" class="btn btn-danger">
+          <i class="text-light fas fa-sign-out-alt"></i> Delete Room
+        </button>
       </div>
     </div>
   </div>
 </div>
-
 <script src="/js/roomchat.js"></script>
+{{else}}
+<div class="card-title text-center">Unauthorized Access</div>
+<p class="card-text text-center">You do not have access for this room.</p>
+{{/if}}

@@ -49,19 +49,12 @@ body {
   border: none;
 }
 
-button{
+button {
   border: none;
   outline: none;
 }
 
-#addBtn{
-  position: fixed;
-  bottom: 25px;
-  right: 25px;
-  border-radius: 5px;
-}
-
-#modalBg{
+#modalBg {
   background-color: rgba(0, 0, 0, 0.562);
   width: 100vw;
   height: 100vh;
@@ -69,18 +62,18 @@ button{
   left: 0px;
   z-index: 555;
   position: fixed;
-  transition: .3s;
+  transition: 0.3s;
 }
 
-#modal{
+#modal {
   position: fixed;
-left: 50%;
-top: 50%;
-transform: translate(-50%,-50%);
-z-index: 999;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 999;
 }
 
-input{
+input {
   outline: none;
 }
 
@@ -91,3 +84,24 @@ audio {
   display: 'none';
 }
 
+.homepage {
+  position: absolute;
+  left: 50%;
+  top: 40%;
+  transform: translate(-50%, -50%);
+  font-size: 60px;
+  opacity: 0;
+  transition: opacity 5s;
+}
+
+.transition {
+  opacity: 1;
+}
+
+#alert {
+  position: fixed;
+  bottom: 25px;
+  width: 500px;
+  right: 25px;
+  z-index: 9999;
+}

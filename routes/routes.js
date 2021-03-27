@@ -3,12 +3,18 @@ const Room = require('../models/Room');
 const User = require('../models/User');
 const Message = require('../models/Message');
 const { v4: uuidv4 } = require('uuid');
-const { sequelize } = require('../models/User');
-const Sequelize = require('sequelize');
+const { Sequelize } = require('sequelize');
 const Op = Sequelize.Op;
 
 router.get('/', (req, res) => {
   res.render('homepage', {
+    loggedIn: req.session.loggedIn,
+    name: req.session.name,
+  });
+});
+
+router.get('/homepage', (req, res) => {
+  res.render('loggedIn', {
     loggedIn: req.session.loggedIn,
     name: req.session.name,
   });
@@ -38,7 +44,6 @@ router.get('/rooms', async (req, res) => {
 router.post('/roomscode', async (req, res) => {
   try {
     const findRoom = await Room.findOne({ where: { code: req.body.code } });
-    console.log(findRoom);
     await Room.create({
       title: findRoom.title,
       code: findRoom.code,
@@ -162,6 +167,7 @@ router.get('/room/:id', async (req, res) => {
       messages,
       loggedIn: req.session.loggedIn,
       name: userName,
+      user_id: [req.session.userId],
       roomID: roomID,
     });
   } catch (err) {
@@ -190,6 +196,20 @@ router.post('/logout', (req, res) => {
     });
   } else {
     res.redirect('/');
+  }
+});
+
+router.delete('/room/:id', async (req, res)=> {
+  try{
+    const userData = await Room.destroy({
+      where:{
+        code: req.body.room_id,
+        userId: req.body.user_id
+      }
+    });
+    res.status(200).json(userData);
+  }catch(err){
+    res.status(500).json(err);
   }
 });
 
