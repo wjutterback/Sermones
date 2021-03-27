@@ -54,13 +54,6 @@ button {
   outline: none;
 }
 
-#addBtn {
-  position: fixed;
-  bottom: 25px;
-  right: 25px;
-  border-radius: 5px;
-}
-
 #modalBg {
   background-color: rgba(0, 0, 0, 0.562);
   width: 100vw;

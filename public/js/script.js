@@ -87,6 +87,7 @@ socket.on('audioUsers', (users, roomID) => {
   });
 });
 
+
 socket.on('newDM', (message, senderName) => {
   console.log(message);
   if (
@@ -113,6 +114,13 @@ socket.on('newDM', (message, senderName) => {
   }
 });
 
+const atName = (name) => {
+  const selected = $(name).attr('data-name');
+  $('#dm-name').val('');
+  $('#dm-name').val(selected);
+};
+
+
 socket.on('dmMessages', (messages) => {
   const messageArr = [];
   messages.forEach((message) => {
@@ -123,7 +131,7 @@ socket.on('dmMessages', (messages) => {
   uniqueSender.forEach((user) => {
     const dm = $(document.createElement('div'));
     dm.html(`<div  class="row card mb-2 p-3 message-card">
-       <div class="card-header p-1" style="background-color: transparent; border: none;"><div><button id="msgName" class="btn text-light">${user}</button></div>
+       <div class="card-header p-1" style="background-color: transparent; border: none;"><div><button id="msgName" class="btn text-light onClick="atName(this)">${user}</button></div>
            </div>
            </div>`);
     $('#directMessages').append(dm);
@@ -271,16 +279,14 @@ $('#chat-message').keydown(function (e) {
 
 $('#makeRoomCode').on('click', async function () {
   const code = $('#addCode').val().trim();
-  console.log(code);
-  if ($('#addCode').val().length !== 0) {
+  if (code) {
     const response = await fetch('/roomscode', {
       method: 'POST',
       body: JSON.stringify({ code }),
       headers: { 'Content-Type': 'application/json' },
     });
-    console.log(response);
     if (response.ok) {
-      location.reload();
+      document.location.replace('/rooms');
     } else {
       alert('FAIL');
     }
@@ -377,3 +383,20 @@ const updateLocalStorage = () => {
 };
 
 updateLocalStorage();
+
+$('#leaveRoom').on('click', async () => {
+  const user_id = $('#user').attr('data-user');
+  const room_id = $('#audioChannel1').attr('data-room');
+  const response = await fetch(`/room/${room_id}`, {
+    method: 'DELETE',
+    body: JSON.stringify({user_id, room_id}),
+    headers: { 'Content-Type': 'application/json' },
+  });
+
+  if (response.ok){
+    document.location.replace('/rooms');
+  }else {
+    alert('something went wrong!');
+  }
+});
+
