@@ -113,6 +113,15 @@ socket.on('newDM', (message, senderName) => {
   }
 });
 
+// add: to id="msgName" onClick="atName(this)
+// const atName = (button) => {
+//   console.log(button);
+//   if ($('#dmSender').text() !== button.innerText) {
+//     $('#chatCards').empty();
+//     socket.emit('getDM', button.innerText, localStorage.getItem('username'));
+//   }
+// };
+
 socket.on('dmMessages', (messages) => {
   const messageArr = [];
   messages.forEach((message) => {
@@ -307,12 +316,17 @@ $('#audioChannel1').on('click', () => {
 
 $('#dm-input').keydown(function (e) {
   if (e.which === 13 && $('#dm-input').val().length !== 0) {
-    socket.emit(
-      'dm-message',
-      $('#dm-name').val(),
-      $('#dm-input').val(),
-      localStorage.getItem('username')
-    );
+    const username = localStorage.getItem('username');
+    const message = $('#dm-input').val();
+    socket.emit('dm-message', $('#dm-name').val(), message, username);
+    const dm = $(document.createElement('div'));
+    dm.html(`<div  class="row card mb-2 p-3 message-card">
+    <div class="card-header p-1" style="background-color: transparent; border: none;">
+    <small class="text-muted">${new Date().toLocaleString()}
+          </small><div id="dmSender">${username}</div><div> - ${message}</div>
+          </div>
+          </div>`);
+    $('#chatCards').append(dm);
     $('#dm-input').val('');
   }
 });
