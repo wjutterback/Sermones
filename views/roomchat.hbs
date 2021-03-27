@@ -6,7 +6,7 @@
   class="row main m-auto w-100"
   style="color: #d8d7df"
 >
-  <div style="background-color: #2d2f35 ;" class="col-2 p-4 h-100">
+  <div style="background-color: #2d2f35" class="col-2 p-4 h-100">
     <div class="row g-0 text-start">
       <button
         type="button"
@@ -55,7 +55,10 @@
       <div
         class="input-group mt-3 border-top border-secondary p-3 fixed-bottom"
         style="background-color: #363940"
-      >        <button class="btn text-light btn-warning"><i class="fas fa-phone-slash text-light"></i> Leave Voice Chat</button>
+      >
+        <button class="btn text-light btn-warning">
+          <i class="fas fa-phone-slash text-light"></i> Leave Voice Chat
+        </button>
 
         <input
           style="background-color: #2d2f35; color: #d8d7df; position: relative"
@@ -66,13 +69,15 @@
           aria-label="Type message here..."
           aria-describedby="basic-addon1"
         />
-        <button id="leaveRoom" class="btn btn-danger"><i class="text-light fas fa-sign-out-alt"></i> Delete Room</button>
+        <button id="leaveRoom" class="btn btn-danger">
+          <i class="text-light fas fa-sign-out-alt"></i> Delete Room
+        </button>
       </div>
     </div>
   </div>
 </div>
 <script src="/js/roomchat.js"></script>
 {{else}}
-  <div class="card-title text-center">Unauthorized Access</div>
-  <p class="card-text text-center">You do not have access for this room.</p>
+<div class="card-title text-center">Unauthorized Access</div>
+<p class="card-text text-center">You do not have access for this room.</p>
 {{/if}}

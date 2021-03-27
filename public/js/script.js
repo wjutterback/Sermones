@@ -139,35 +139,32 @@ socket.on('dmMessages', (messages) => {
   });
 });
 
+const scrollToBottom = () => {
+  const chatWindow = $('.chat-window');
+  chatWindow.scrollTop(chatWindow.prop('scrollHeight'));
+};
+
 socket.on('populateDM', (messages) => {
   console.log(messages);
   messages.forEach((message) => {
     console.log(message);
     const dm = $(document.createElement('div'));
     dm.html(`<div  class="row card mb-2 p-3 message-card">
-    <div class="card-header p-1" style="background-color: transparent; border: none;">
-    <small class="text-muted">${new Date(
+    <div id="dmSender" class="card-header p-1" style="background-color: transparent; border: none;">
+    ${message.name} <small class="text-muted">${new Date(
       message.createdAt
     ).getMonth()}/${new Date(message.createdAt).getDate()}/${new Date(
       message.createdAt
     ).getFullYear()} - ${new Date(message.createdAt).getHours()}:${new Date(
       message.createdAt
     ).getMinutes()}:${new Date(message.createdAt).getSeconds()}
-        </small><div id="dmSender">${message.name}</div><div> - ${
-      message.text
-    }</div>
-        </div>
+        </small> </div><div class="card-body p-1"> ${message.text}</div>
         </div>`);
     console.log(dm);
     $('#chatCards').append(dm);
-    return;
   });
+  scrollToBottom();
 });
-
-const scrollToBottom = () => {
-  const chatWindow = $('.chat-window');
-  chatWindow.scrollTop(chatWindow.prop('scrollHeight'));
-};
 
 socket.on('createMessage', (message, username) => {
   const messageBody = $('<div>');
@@ -396,13 +393,13 @@ $('#leaveRoom').on('click', async () => {
   const room_id = $('#audioChannel1').attr('data-room');
   const response = await fetch(`/room/${room_id}`, {
     method: 'DELETE',
-    body: JSON.stringify({user_id, room_id}),
+    body: JSON.stringify({ user_id, room_id }),
     headers: { 'Content-Type': 'application/json' },
   });
 
-  if (response.ok){
+  if (response.ok) {
     document.location.replace('/rooms');
-  }else {
+  } else {
     alert('something went wrong!');
   }
 });
