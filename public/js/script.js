@@ -265,7 +265,7 @@ $('#chat-message').keydown(function (e) {
     }
   }
 });
-//TODO: Get the user id added to json attribute in the Room object
+
 $('#makeRoomCode').on('click', async function () {
   const code = $('#addCode').val().trim();
   console.log(code);
