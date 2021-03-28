@@ -1,10 +1,10 @@
 [![License](https://img.shields.io/badge/license-MIT-green)](http://choosealicense.com/licenses/mit/)
 
-# Chat-App
+# Sermones
 
 ## Description
 
-> This is a chatroom application.
+> This is a chatroom application which allows for private rooms, direct messaging, and audio/video.
 
 ## Link to Deployed Application
 
