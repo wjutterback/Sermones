@@ -33,7 +33,7 @@ Start the server, create an account or login, and then start chatting!
 
 ## Technologies
 
-Sockets.io, Node.js, Express.js, Express-Session, Sequelize.js, Handlebars.js/EJS (one of them), bcrypt.js, mysql2, dotenv, connection-session-sequelize, Knockout.js, jQuery.js
+Sockets.io, Node.js, Express.js, Express-Session, Sequelize.js, Handlebars.js, bcrypt.js, mysql2, dotenv, connection-session-sequelize, jQuery.js
 
 ## Issues
 
