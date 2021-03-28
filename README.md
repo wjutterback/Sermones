@@ -8,6 +8,8 @@
 
 ## Link to Deployed Application
 
+https://sermones.herokuapp.com/
+
 ## Table of Contents
 
 - [Installation](#Installation)
