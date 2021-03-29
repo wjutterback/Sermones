@@ -72,8 +72,24 @@ router.get('/sign-in', (req, res) => {
   res.render('sign-in', { loggedIn: req.session.loggedIn });
 });
 
-router.get('/messages', (req, res) => {
-  res.render('dm', { loggedIn: req.session.loggedIn, name: req.session.name });
+router.get('/messages', async (req, res) => {
+  try{
+    const usersData = await User.findAll({
+
+      where: {
+        name: {
+          [Op.not]: req.session.name
+        }
+      },
+      attributes: { exclude: ['password'] }});
+    const users = usersData.map((users) => users.get({ plain: true }));
+    console.log(users);
+    res.render('dm',
+      {users, loggedIn: req.session.loggedIn, name: req.session.name });
+
+  }catch(err){
+    res.status(500).json(err);
+  }
 });
 
 router.post('/sign-in', async (req, res) => {

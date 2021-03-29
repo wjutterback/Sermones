@@ -43,7 +43,15 @@
           placeholder="Username"
           aria-label="Username"
           aria-describedby="dmUserAria"
+          list="datalistOptions"
         />
+        <datalist style="overflow-y: auto!important" id="datalistOptions">
+          <select>
+          {{#each users as |user|}}
+<option value="{{user.name}}">
+    {{/each}}
+  </select>
+</datalist>
         <input
           style="background-color: #2d2f35; color: #d8d7df; position: relative"
           type="text"
