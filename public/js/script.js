@@ -78,6 +78,10 @@ socket.on('addUser', (user) => {
   const filter = audioUsers.filter((i) => i === user);
   if (filter.length === 0) {
     $('#appendAudio').append(`<li class='userName'>${user}</li>`);
+
+    const dm = $(document.createElement('div'));
+    dm.html(`<div class="userPos" id="userPos_${user}" userPosx="0" userPosy="0" userPosz="0"  style="display:none"></div>`);
+    $('#allUserPos').append(dm);
   }
 });
 
