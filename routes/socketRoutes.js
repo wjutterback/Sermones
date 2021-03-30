@@ -107,11 +107,10 @@ module.exports = (io) => {
 
     socket.on('peerDestroy', async (username) => {
       const user = await User.findOne({ where: { name: username } });
-      io.to(user.socketId).emit('diediedie');
+      io.to(user.socketId).emit('destroyConnect');
     });
 
     socket.on('room-joined', async (roomID) => {
-      console.log('room joined fired');
       const getAudioUsers = await User.findAll({
         where: { audioId: { [Op.not]: null } },
         include: [{ model: Audio }],
