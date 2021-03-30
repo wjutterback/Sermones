@@ -36,11 +36,14 @@
     <div class="row" style="height: 97%; max-height: 97%">
       <div class="row g-0 w-100 chat-window" id="chat-window">
         <div class="row g-0 w-100 chat-window" id="chat-window">
-        <video autoplay="true" id="videoElement"></video>
-        <canvas id="canvasLessTwo" width="240" height="180" style="display:none"></canvas>
-        <canvas id="canvasLessOne" width="240" height="180" style="display:none"></canvas>
-        <canvas id="canvas" width="240" height="180" style="display:none"></canvas>
-        <canvas id="canvasDiff" width="240" height="180" ></canvas>
+        {{!-- <video autoplay="true" id="videoElement"></video> --}}
+        {{!-- <canvas id="canvasLessTwo" width="240" height="180" style="display:none"></canvas> --}}
+        {{!-- <canvas id="canvasLessOne" width="240" height="180" style="display:none"></canvas> --}}
+        {{!-- <canvas id="canvas" width="240" height="180" style="display:none"></canvas> --}}
+        {{!-- <canvas id="canvasDiff" width="240" height="180" ></canvas> --}}
+        <div id="moveWindow">
+          
+        </div>
         <div class="userPos" id="userPos_{{user_id}}" userPosx="0" userPosy="0" userPosz="0"  style="display:none"></div>
         
         <ul id="chatCards" class="messages g-0">
@@ -85,7 +88,7 @@
   </div>
 </div>
 <script src="/js/roomchat.js"></script>
-<script src="/js/vidProc.js"></script>
+{{!-- <script src="/js/vidProc.js"></script> --}}
 {{else}}
 <div class="card-title text-center">Unauthorized Access</div>
 <p class="card-text text-center">You do not have access for this room.</p>
