@@ -11,8 +11,7 @@ socket.on('create', (user) => {
   //   port: 3030,
   // });
 
-  socket.on('diediedie', () => {
-    console.log('incoming received');
+  socket.on('destroyConnect', () => {
     peer.destroy();
   });
 
@@ -24,10 +23,7 @@ socket.on('create', (user) => {
     navigator.mediaDevices
       .getUserMedia({ video: false, audio: true })
       .then((stream) => {
-        const myStream = stream;
-        console.log(myStream);
-        console.log('incoming stream triggered');
-        incomingCall.answer(myStream);
+        incomingCall.answer(stream);
         incomingCall.on('stream', (incomingStream) => {
           const audio = document.createElement('audio');
           audio.srcObject = incomingStream;
@@ -46,9 +42,7 @@ socket.on('create', (user) => {
         navigator.mediaDevices
           .getUserMedia({ video: false, audio: true })
           .then((stream) => {
-            const myStream = stream;
-            console.log(myStream);
-            let call = peer.call(peerId, myStream);
+            let call = peer.call(peerId, stream);
             call.on('stream', function (incomingStream) {
               const audio = document.createElement('audio');
               audio.srcObject = incomingStream;
@@ -80,7 +74,9 @@ socket.on('addUser', (user) => {
     $('#appendAudio').append(`<li class='userName'>${user}</li>`);
 
     const dm = $(document.createElement('div'));
-    dm.html(`<div class="userPos" id="userPos_${user}" userPosx="0" userPosy="0" userPosz="0"  style="display:none"></div>`);
+    dm.html(
+      `<div class="userPos" id="userPos_${user}" userPosx="0" userPosy="0" userPosz="0"  style="display:none"></div>`
+    );
     $('#allUserPos').append(dm);
   }
 });
@@ -144,20 +140,28 @@ socket.on('dmMessages', (messages) => {
   uniqueSender.forEach((user) => {
     const dm = $(document.createElement('div'));
     dm.html(`<div  class="row card mb-2 p-3 message-card">
-       <div class="card-header p-1" style="background-color: transparent; border: none;"><div><button id="msgName" class="btn text-light">${user} <span style="border-radius:50%; border:solid red 1px;padding:2px" id="notifyUnread${user}"></span></button></div>
-           </div>
-           </div>`);
+    <div class="card-header p-1" style="background-color: transparent; border: none;"><div><span style="border-radius: 50%; border:solid red 1px; padding-right: 8.5px; padding-left: 8.5px" id="notifyUnread${user}"></span><button id="msgName" class="btn text-light">${user}</button></div>
+    </div>
+    </div>`);
     $('#directMessages').append(dm);
+  });
+  let lastPullDateStorage = localStorage.getItem('userLastCheckedMessages');
+  let lastPullDate = new Date(lastPullDateStorage);
+  let messagesUnchecked = 0;
+  messages.forEach((message) => {
+    let dateMessageCreatedAt = new Date(message.createdAt);
+    if (dateMessageCreatedAt >= lastPullDate === true) {
+      messagesUnchecked = messagesUnchecked + 1;
+    }
+    var unnotifiedSpan = $(`#notifyUnread${message.name}`);
+    unnotifiedSpan.text(`${messagesUnchecked}`);
   });
 });
 
 socket.on('populateDM', (messages) => {
-  // let localDatePull=new Date();
-  let lastPullDate=localStorage.getItem('userLastCheckedMessages');
-  let messagesUnchecked=0;
+  let localDatePull = new Date();
   messages.forEach((message) => {
     const dm = $(document.createElement('div'));
-    let dateMessageCreatedAt=new Date(message.createdAt);
     dm.html(`<div  class="row card mb-2 p-3 message-card">
     <div id="dmSender" class="card-header p-1" style="background-color: transparent; border: none;">
     ${message.name} <small class="text-muted"> ${new Date(
@@ -166,23 +170,9 @@ socket.on('populateDM', (messages) => {
         </small> </div><div class="card-body p-1"> ${message.text}</div>
         </div>`);
     $('#chatCards').append(dm);
-    
-
-    if (dateMessageCreatedAt.getTime()>=lastPullDate.getTime())
-    {
-        messagesUnchecked=messagesUnchecked+1;
-    }
+    scrollToBottom();
+    localStorage.setItem('userLastCheckedMessages', localDatePull);
   });
-  scrollToBottom();
-  var unnotifiedSpan=$(`#notifyUnread${message.name}`);
-  if (unnotifiedSpan.innerText) {
-    unnotifiedSpan.innerText = messagesUnchecked;
-  }
-  else
-  if (unnotifiedSpan.textContent) {
-    unnotifiedSpan.textContent = messagesUnchecked;   
-  }
-  // localStorage.setItem('userLastCheckedMessages',localDatePull);
 });
 
 socket.on('createMessage', (message, username) => {
@@ -358,8 +348,6 @@ document.addEventListener('click', function (e) {
         e.target.innerText,
         localStorage.getItem('username')
       );
-      let localDatePull=new Date();
-      localStorage.setItem('userLastCheckedMessages',localDatePull);
     }
   }
 });

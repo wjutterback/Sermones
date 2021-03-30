@@ -73,21 +73,23 @@ router.get('/sign-in', (req, res) => {
 });
 
 router.get('/messages', async (req, res) => {
-  try{
+  try {
     const usersData = await User.findAll({
-
       where: {
         name: {
-          [Op.not]: req.session.name
-        }
+          [Op.not]: req.session.name,
+        },
       },
-      attributes: { exclude: ['password'] }});
+      attributes: { exclude: ['password'] },
+    });
     const users = usersData.map((users) => users.get({ plain: true }));
     console.log(users);
-    res.render('dm',
-      {users, loggedIn: req.session.loggedIn, name: req.session.name });
-
-  }catch(err){
+    res.render('dm', {
+      users,
+      loggedIn: req.session.loggedIn,
+      name: req.session.name,
+    });
+  } catch (err) {
     res.status(500).json(err);
   }
 });
@@ -126,8 +128,6 @@ router.post('/sign-in', async (req, res) => {
         loggedIn: req.session.loggedIn,
         userId: req.session.userId,
       });
-      let localDate=new Date();
-      localStorage.setItem('userLastCheckedMessages',localDate);
     });
   } catch (err) {
     console.log(err);
@@ -217,16 +217,16 @@ router.post('/logout', (req, res) => {
   }
 });
 
-router.delete('/room/:id', async (req, res)=> {
-  try{
+router.delete('/room/:id', async (req, res) => {
+  try {
     const userData = await Room.destroy({
-      where:{
+      where: {
         code: req.body.room_id,
-        userId: req.body.user_id
-      }
+        userId: req.body.user_id,
+      },
     });
     res.status(200).json(userData);
-  }catch(err){
+  } catch (err) {
     res.status(500).json(err);
   }
 });
