@@ -140,7 +140,7 @@ socket.on('dmMessages', (messages) => {
   uniqueSender.forEach((user) => {
     const dm = $(document.createElement('div'));
     dm.html(`<div  class="row card mb-2 p-3 message-card">
-    <div class="card-header p-1" style="background-color: transparent; border: none;"><div><span style="border-radius: 50%; border:solid red 1px; padding-right: 8.5px; padding-left: 8.5px" id="notifyUnread${user}"></span><button id="msgName" class="btn text-light">${user}</button></div>
+    <div class="card-header p-1" style="background-color: transparent; border: none;"><div><span class="badge bg-secondary"" id="notifyUnread${user}"></span><button id="msgName" class="btn text-light">${user}</button></div>
     </div>
     </div>`);
     $('#directMessages').append(dm);
@@ -331,6 +331,11 @@ $('#dm-input').keydown(function (e) {
           </small><div class="card-body p-1"> ${message}</div>
           </div>
           </div>`);
+    socket.emit(
+      'getDM',
+      username,
+      localStorage.getItem('username')
+    );
     $('#chatCards').append(dm);
     $('#dm-input').val('');
     scrollToBottom();
