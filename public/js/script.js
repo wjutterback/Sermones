@@ -26,9 +26,9 @@ socket.on('create', (user) => {
         incomingCall.answer(stream);
         incomingCall.on('stream', (incomingStream) => {
           const audio = document.createElement('audio');
+          document.body.appendChild(audio);
           audio.srcObject = incomingStream;
           audio.play();
-          document.body.appendChild(audio);
         });
         peer.on('disconnected', function () {
           peer.reconnect();
@@ -45,9 +45,9 @@ socket.on('create', (user) => {
             let call = peer.call(peerId, stream);
             call.on('stream', function (incomingStream) {
               const audio = document.createElement('audio');
+              document.body.appendChild(audio);
               audio.srcObject = incomingStream;
               audio.play();
-              document.body.appendChild(audio);
             });
             peer.on('disconnected', function () {
               peer.reconnect();
