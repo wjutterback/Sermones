@@ -1,3 +1,4 @@
+const compression = require('compression');
 const path = require('path');
 const express = require('express');
 const { ExpressPeerServer } = require('peer');
@@ -37,7 +38,7 @@ const peerServer = ExpressPeerServer(httpServer, {
 
 //route to peerjs connection
 app.use('/peerjs', peerServer);
-
+app.use(compression({ filter: shouldCompress }));
 app.use(session(sess));
 app.set('views', path.join(__dirname, '/views'));
 app.engine('.hbs', hbs.engine);
