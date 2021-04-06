@@ -36,19 +36,9 @@ const peerServer = ExpressPeerServer(httpServer, {
   debug: true,
 });
 
-function shouldCompress(req, res) {
-  if (req.headers['x-no-compression']) {
-    // don't compress responses with this request header
-    return false;
-  }
-
-  // fallback to standard filter function
-  return compression.filter(req, res);
-}
-
 //route to peerjs connection
 app.use('/peerjs', peerServer);
-app.use(compression({ filter: shouldCompress }));
+app.use(compression());
 app.use(session(sess));
 app.set('views', path.join(__dirname, '/views'));
 app.engine('.hbs', hbs.engine);
