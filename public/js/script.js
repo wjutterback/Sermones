@@ -98,6 +98,7 @@ socket.on('audioUsers', (users, roomID) => {
   users.forEach((user) => {
     if ((user.audio.channel = roomID)) {
       $('#appendAudio').append(`<li class='userName'>${user.name}</li>`);
+      $('#video-window').append(`<video class='userName' id=videoElement_${user.name} width="480" height="360"></video>`);
     }
   });
 });
