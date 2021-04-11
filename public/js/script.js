@@ -21,7 +21,7 @@ socket.on('create', (user) => {
 
   peer.on('call', (incomingCall) => {
     navigator.mediaDevices
-      .getUserMedia({ video: false, audio: true })
+      .getUserMedia({ video: true, audio: true })
       .then((stream) => {
         incomingCall.answer(stream);
         incomingCall.on('stream', (incomingStream) => {
@@ -29,6 +29,13 @@ socket.on('create', (user) => {
           document.body.appendChild(audio);
           audio.srcObject = incomingStream;
           audio.play();
+
+          const video=document.querySelector(`videoElement_${peerId}`);
+          if (video)
+          {
+            video.srcObject = incomingStream;
+            video.play();
+          }
         });
         peer.on('disconnected', function () {
           peer.reconnect();
@@ -40,7 +47,7 @@ socket.on('create', (user) => {
     peers.forEach((peerId) => {
       if (peerId !== id) {
         navigator.mediaDevices
-          .getUserMedia({ video: false, audio: true })
+          .getUserMedia({ video: true, audio: true })
           .then((stream) => {
             let call = peer.call(peerId, stream);
             call.on('stream', function (incomingStream) {
@@ -48,6 +55,13 @@ socket.on('create', (user) => {
               document.body.appendChild(audio);
               audio.srcObject = incomingStream;
               audio.play();
+
+              const video=document.querySelector(`videoElement_${peerId}`);
+              if (video)
+              {
+                video.srcObject = incomingStream;
+                video.play();
+              }
             });
             peer.on('disconnected', function () {
               peer.reconnect();
@@ -98,7 +112,7 @@ socket.on('audioUsers', (users, roomID) => {
   users.forEach((user) => {
     if ((user.audio.channel = roomID)) {
       $('#appendAudio').append(`<li class='userName'>${user.name}</li>`);
-      $('#video-window').append(`<video class='userName' id=videoElement_${user.name} width="480" height="360"></video>`);
+      $('#video-window').append(`<video class='userName' id="videoElement_${user.callerId}" width="480" height="360"></video>`);
     }
   });
 });
