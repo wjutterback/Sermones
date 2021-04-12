@@ -44,6 +44,7 @@ socket.on('create', (user) => {
   });
 
   socket.on('user-connected', (id, peers) => {
+    console.log(peers);
     peers.forEach((peerId) => {
       if (peerId !== id) {
         navigator.mediaDevices
@@ -86,6 +87,7 @@ socket.on('addUser', (user) => {
   const filter = audioUsers.filter((i) => i === user);
   if (filter.length === 0) {
     $('#appendAudio').append(`<li class='userName'>${user}</li>`);
+    $('#video-window').append(`<video class='userName' id="videoElement_${user.name}" width="480" height="360"></video>`);
 
     const dm = $(document.createElement('div'));
     dm.html(
@@ -112,7 +114,7 @@ socket.on('audioUsers', (users, roomID) => {
   users.forEach((user) => {
     if ((user.audio.channel = roomID)) {
       $('#appendAudio').append(`<li class='userName'>${user.name}</li>`);
-      $('#video-window').append(`<video class='userName' id="videoElement_${user.callerId}" width="480" height="360"></video>`);
+      $('#video-window').append(`<video class='userName' id="videoElement_${user.name}" width="480" height="360"></video>`);
     }
   });
 });
