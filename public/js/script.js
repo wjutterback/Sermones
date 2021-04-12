@@ -44,6 +44,7 @@ socket.on('create', (user) => {
   });
 
   socket.on('user-connected', (id, peers) => {
+    console.log(2);
     console.log(peers);
     peers.forEach((peerId) => {
       if (peerId !== id) {
