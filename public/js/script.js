@@ -30,7 +30,10 @@ socket.on('create', (user) => {
           audio.srcObject = incomingStream;
           audio.play();
 
-          const video=document.querySelector(`videoElement_${peerId}`);
+          // let peer_userName=users.filter( user => user.callerId === peerId)[0].name;
+
+          // const video=document.querySelector(`#videoElement_${peer_userName}`);
+          const video=document.querySelector(`#videoElement_${1}`);
           if (video)
           {
             video.srcObject = incomingStream;
@@ -58,7 +61,10 @@ socket.on('create', (user) => {
               audio.srcObject = incomingStream;
               audio.play();
 
-              const video=document.querySelector(`videoElement_${peerId}`);
+              // let peer_userName=users.filter( user => user.callerId === peerId)[0].name;
+
+              // const video=document.querySelector(`#videoElement_${peer_userName}`);
+              const video=document.querySelector(`#videoElement_${1}`);
               if (video)
               {
                 video.srcObject = incomingStream;
@@ -112,10 +118,11 @@ socket.on('user-disconnected', async (user) => {
 });
 
 socket.on('audioUsers', (users, roomID) => {
-  users.forEach((user) => {
+  users.forEach((user, ind) => {
     if ((user.audio.channel = roomID)) {
       $('#appendAudio').append(`<li class='userName'>${user.name}</li>`);
-      $('#video-window').append(`<video class='userName' id="videoElement_${user.name}" width="480" height="360"></video>`);
+      // $('#video-window').append(`<video class='userName' id="videoElement_${user.name}" width="480" height="360"></video>`);
+      $('#video-window').append(`<video class='userName' id="videoElement_${ind}" width="480" height="360"></video>`);
     }
   });
 });
