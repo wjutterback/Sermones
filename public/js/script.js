@@ -33,7 +33,7 @@ socket.on('create', (user) => {
           // let peer_userName=users.filter( user => user.callerId === peerId)[0].name;
 
           // const video=document.querySelector(`#videoElement_${peer_userName}`);
-          const video=document.querySelector(`#videoElement_${1}`);
+          const video=document.querySelector(`#videoElement_1`);
           if (video)
           {
             video.srcObject = incomingStream;
@@ -64,7 +64,7 @@ socket.on('create', (user) => {
               // let peer_userName=users.filter( user => user.callerId === peerId)[0].name;
 
               // const video=document.querySelector(`#videoElement_${peer_userName}`);
-              const video=document.querySelector(`#videoElement_${1}`);
+              const video=document.querySelector(`#videoElement_1`);
               if (video)
               {
                 video.srcObject = incomingStream;
