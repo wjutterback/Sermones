@@ -97,6 +97,17 @@ module.exports = (io) => {
       });
     });
 
+    socket.on('createNewPeer', async (room, callerName) => {
+      const caller = await User.findOne({ where: { name: callerName } });
+      io.to(room).emit('newPeer', caller);
+    });
+
+    socket.on('setUpVideo', async (newPeer, username, caller) => {
+      await User.update({ videoId: newPeer }, { where: { name: username } });
+      const calledUser = await User.findOne({ where: { name: username } });
+      io.to(caller.socketId).emit('callMe', calledUser);
+    });
+
     socket.on('userJoin', (user, room) => {
       io.to(room).emit('addUser', user);
     });
@@ -110,7 +121,8 @@ module.exports = (io) => {
       io.to(user.socketId).emit('destroyConnect');
     });
 
-    socket.on('room-joined', async (roomID) => {
+    socket.on('room-joined', async (roomID, userID) => {
+      await User.update({ roomId: roomID }, { where: { name: userID } });
       const getAudioUsers = await User.findAll({
         where: { audioId: { [Op.not]: null } },
         include: [{ model: Audio }],
@@ -125,7 +137,7 @@ module.exports = (io) => {
       socket.on('disconnect', async () => {
         const dcUser = await User.findOne({ where: { socketId: socket.id } });
         await User.update(
-          { audioId: null },
+          { audioId: null, roomId: null, videoId: null },
           { where: { socketId: socket.id } }
         );
         io.to(roomID).emit('user-disconnected', dcUser);

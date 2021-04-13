@@ -21,24 +21,15 @@ socket.on('create', (user) => {
 
   peer.on('call', (incomingCall) => {
     navigator.mediaDevices
-      .getUserMedia({ video: true, audio: true })
+      .getUserMedia({ video: false, audio: true })
       .then((stream) => {
+        console.log(stream);
         incomingCall.answer(stream);
         incomingCall.on('stream', (incomingStream) => {
           const audio = document.createElement('audio');
           document.body.appendChild(audio);
           audio.srcObject = incomingStream;
           audio.play();
-
-          // let peer_userName=users.filter( user => user.callerId === peerId)[0].name;
-
-          // const video=document.querySelector(`#videoElement_${peer_userName}`);
-          const video=document.querySelector(`#videoElement_1`);
-          if (video)
-          {
-            video.srcObject = incomingStream;
-            video.play();
-          }
         });
         peer.on('disconnected', function () {
           peer.reconnect();
@@ -52,7 +43,7 @@ socket.on('create', (user) => {
     peers.forEach((peerId) => {
       if (peerId !== id) {
         navigator.mediaDevices
-          .getUserMedia({ video: true, audio: true })
+          .getUserMedia({ video: false, audio: true })
           .then((stream) => {
             let call = peer.call(peerId, stream);
             call.on('stream', function (incomingStream) {
@@ -60,16 +51,6 @@ socket.on('create', (user) => {
               document.body.appendChild(audio);
               audio.srcObject = incomingStream;
               audio.play();
-
-              // let peer_userName=users.filter( user => user.callerId === peerId)[0].name;
-
-              // const video=document.querySelector(`#videoElement_${peer_userName}`);
-              const video=document.querySelector(`#videoElement_1`);
-              if (video)
-              {
-                video.srcObject = incomingStream;
-                video.play();
-              }
             });
             peer.on('disconnected', function () {
               peer.reconnect();
@@ -94,8 +75,6 @@ socket.on('addUser', (user) => {
   const filter = audioUsers.filter((i) => i === user);
   if (filter.length === 0) {
     $('#appendAudio').append(`<li class='userName'>${user}</li>`);
-    $('#video-window').append(`<video class='userName' id="videoElement_${user.name}" width="480" height="360"></video>`);
-
     const dm = $(document.createElement('div'));
     dm.html(
       `<div class="userPos" id="userPos_${user}" userPosx="0" userPosy="0" userPosz="0"  style="display:none"></div>`
@@ -118,12 +97,9 @@ socket.on('user-disconnected', async (user) => {
 });
 
 socket.on('audioUsers', (users, roomID) => {
-  users.forEach((user, ind) => {
-    if ((user.audio.channel = roomID)) {
+  users.forEach((user) => {
+    if (user.audio.channel === roomID) {
       $('#appendAudio').append(`<li class='userName'>${user.name}</li>`);
-      // $('#video-window').append(`<video class='userName' id="videoElement_${user.name}" width="480" height="360"></video>`);
-      console.log(ind);
-      $('#video-window').append(`<video class='userName' id="videoElement_${ind}" width="480" height="360"></video>`);
     }
   });
 });
@@ -357,11 +333,7 @@ $('#dm-input').keydown(function (e) {
           </small><div class="card-body p-1"> ${message}</div>
           </div>
           </div>`);
-    socket.emit(
-      'getDM',
-      username,
-      localStorage.getItem('username')
-    );
+    socket.emit('getDM', username, localStorage.getItem('username'));
     $('#chatCards').append(dm);
     $('#dm-input').val('');
     scrollToBottom();
@@ -478,4 +450,48 @@ const notif = (text, sender) => {
 
 socket.on('notification', (text, sender) => {
   notif(text, sender);
+});
+
+socket.on('newPeer', (callername) => {
+  const peer = new Peer(undefined, {
+    host: 'peerjs-isw.herokuapp.com',
+  });
+  peer.on('call', (incomingCall) => {
+    incomingCall.answer();
+    incomingCall.on('stream', (incomingStream) => {
+      const video = document.getElementById('videoElement');
+      video.srcObject = incomingStream;
+      video.addEventListener('loadedmetadata', () => {
+        video.play();
+      });
+    });
+    peer.on('disconnected', function () {
+      peer.reconnect();
+    });
+  });
+  peer.on('open', function (id) {
+    socket.emit('setUpVideo', id, $('#select').attr('data-name'), callername);
+  });
+});
+
+socket.on('callMe', (user) => {
+  const peer = new Peer(undefined, {
+    host: 'peerjs-isw.herokuapp.com',
+  });
+  navigator.mediaDevices
+    .getUserMedia({ video: true, audio: false })
+    .then((stream) => {
+      peer.call(user.videoId, stream);
+      peer.on('disconnected', function () {
+        peer.reconnect();
+      });
+    });
+});
+
+$('#videoChannel').on('click', () => {
+  socket.emit(
+    'createNewPeer',
+    $('#videoChannel').attr('data-room'),
+    $('#select').attr('data-name')
+  );
 });
