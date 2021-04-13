@@ -33,7 +33,7 @@ socket.on('create', (user) => {
           // let peer_userName=users.filter( user => user.callerId === peerId)[0].name;
 
           // const video=document.querySelector(`#videoElement_${peer_userName}`);
-          const video=document.querySelector(`#videoElement_${1}`);
+          const video=document.querySelector(`#videoElement_1`);
           if (video)
           {
             video.srcObject = incomingStream;
@@ -64,7 +64,7 @@ socket.on('create', (user) => {
               // let peer_userName=users.filter( user => user.callerId === peerId)[0].name;
 
               // const video=document.querySelector(`#videoElement_${peer_userName}`);
-              const video=document.querySelector(`#videoElement_${1}`);
+              const video=document.querySelector(`#videoElement_1`);
               if (video)
               {
                 video.srcObject = incomingStream;
@@ -122,6 +122,7 @@ socket.on('audioUsers', (users, roomID) => {
     if ((user.audio.channel = roomID)) {
       $('#appendAudio').append(`<li class='userName'>${user.name}</li>`);
       // $('#video-window').append(`<video class='userName' id="videoElement_${user.name}" width="480" height="360"></video>`);
+      console.log(ind);
       $('#video-window').append(`<video class='userName' id="videoElement_${ind}" width="480" height="360"></video>`);
     }
   });
