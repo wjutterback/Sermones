@@ -10,6 +10,14 @@
     <div class="row g-0 text-start">
       <button
         type="button"
+        class="btn p-0 w-100 text-start btn-link mb-5"
+        id="videoChannel"
+        data-room="{{roomID}}"
+        data-audio="{{roomID}}"
+        style="text-decoration: none; color: #d8d7df; opacity: 0.5"
+      ><i class="fas fa-video"></i>Click to Share Video</button>
+      <button
+        type="button"
         class="btn p-0 w-100 text-start btn-link"
         id="audioChannel1"
         data-room="{{roomID}}"
@@ -39,7 +47,7 @@
            <div class="row g-0 w-100 video-window" id="video-window">
 
            </div>
-        {{!-- <video autoplay="true" id="videoElement"></video> --}}
+        <video id="videoElement"></video>
         {{!-- <canvas id="canvasLessTwo" width="240" height="180" style="display:none"></canvas> --}}
         {{!-- <canvas id="canvasLessOne" width="240" height="180" style="display:none"></canvas> --}}
         {{!-- <canvas id="canvas" width="240" height="180" style="display:none"></canvas> --}}

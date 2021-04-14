@@ -38,7 +38,11 @@ User.init(
       allowNull: true,
     },
     roomId: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    videoId: {
+      type: DataTypes.STRING,
       allowNull: true,
     },
   },
